@@ -1,5 +1,6 @@
 %{
   #include <stdio.h>
+  
   int yylex();
   void yyerror(char*);
 
@@ -8,25 +9,42 @@
 
 %}
 
-%token ID
-%token ENTIER
-%token FLOTTANT
+%union
+{
+  char* text;
+  float flottant;
+  int entier_lex;
+  void * none;
+}
+
+%token PRAGMA
+%token <text> LIBRARY
+%token <entier_lex> PRECISION
+%token <entier_lex> ROUNDING
+%token <text> CST
+%token <text> ID
+%token <entier_lex> ENTIER
+%token <flottant> FLOTTANT
+%token <text> FUNC
+
+%type <none> ligne E F T
+
 %start ligne
 %left '+' '-'
 %left '*' '/'
-%left '(' ')'
+%left '(' ')' '{' '}'
 
 %%
-ligne : E '\n' { fprintf(out_file, "\n"); $$=$1;}
-E : E '+' T		 { fprintf(out_file, "mpc_add(%d,%d,res, arrondi)\n",$1,$3); $$ = $1+$3;}
-  | E '-' T    { fprintf(out_file, "mpc_sub(%d,%d,res, arrondi)\n",$1,$3); $$ = $1-$3; }
+ligne : E '\n'     { fprintf(out_file, "\n");}
+E : E '+' T		 { fprintf(out_file, "mpc_add(%d,%d,res, arrondi)\n",$1,$3);}
+  | E '-' T    { fprintf(out_file, "mpc_sub(%d,%d,res, arrondi)\n",$1,$3); }
   | T
   ;
-T : T '*' F		 { fprintf(out_file, "mpc_mult(%d,%d,res,arrondi)\n",$1,$3); $$= $1*$3;}
-  | T '/' F    { fprintf(out_file, "mpc_div(%d,%d,res,arrondi)\n",$1,$3); $$= $1/$3;}
+T : T '*' F		 { fprintf(out_file, "mpc_mult(%d,%d,res,arrondi)\n",$1,$3);}
+  | T '/' F    { fprintf(out_file, "mpc_div(%d,%d,res,arrondi)\n",$1,$3);}
   | F
   ;
-F : '(' E ')'	 { $$=$2;}
+F : '(' E ')'	 { fprintf(out_file," ");}
   | ENTIER
   ;
 
