@@ -2,6 +2,7 @@
   #include <stdio.h>
   int yylex();
   void yyerror(char*);
+  int compt = 0;
 
   FILE* yyin;
   FILE* out_file;
@@ -18,13 +19,36 @@
 
 %%
 ligne : E '\n' { fprintf(out_file, "\n"); $$=$1;}
-E : E '+' T		 { 	fprintf(out_file, 	"mpc_t T0; mpc_init2(T0, prec);\nmpc_t T1; mpc_init2(T1, prec);\nmpc_t T2; mpc_init2(T2, prec);\nmpc_set_si(T0,%d, arrondi);\nmpc_set_si(T1,%d, arrondi);\nmpc_add(T0,T1,T2, arrondi)\n",$1,$3); 
-					$$ = $1+$3;}
-  | E '-' T    { fprintf(out_file, "mpc_sub(%d,%d,res, arrondi)\n",$1,$3); $$ = $1-$3; }
+E : E '+' T		 { fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-2),$1);
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-1),$3);
+                 fprintf(out_file, "mpc_add(T%d,T%d,T%d, arrondi);\n",(compt-1),(compt-1),(compt-2));
+					       $$ = $1+$3;
+               }
+  | E '-' T    { fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-2),$1);
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-1),$3);
+                 fprintf(out_file, "mpc_sub(T%d,T%d,T%d, arrondi);\n",(compt-1),(compt-1),(compt-2));
+  					     $$ = $1-$3;
+               }
   | T
   ;
-T : T '*' F		 { fprintf(out_file, "mpc_mult(%d,%d,res,arrondi)\n",$1,$3); $$= $1*$3;}
-  | T '/' F    { fprintf(out_file, "mpc_div(%d,%d,res,arrondi)\n",$1,$3); $$= $1/$3;}
+T : T '*' F		 { fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-2),$1);
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-1),$3);
+                 fprintf(out_file, "mpc_mult(T%d,T%d,T%d, arrondi);\n",(compt-1),(compt-1),(compt-2));
+                 $$ = $1*$3;
+               }
+  | T '/' F    { fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_t T%d; mpc_init2(T%d, prec);\n",compt,compt); compt++;
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-2),$1);
+                 fprintf(out_file, "mpc_set_si(T%d,%d, arrondi);\n",(compt-1),$3);
+                 fprintf(out_file, "mpc_div(T%d,T%d,T%d, arrondi);\n",(compt-1),(compt-1),(compt-2));
+  					     $$ = $1/$3;
+               }
   | F
   ;
 F : '(' E ')'	 { $$=$2;}
@@ -32,6 +56,13 @@ F : '(' E ')'	 { $$=$2;}
   ;
 
 %%
+
+void end_file() {
+  int i;
+  for(i = 0; i < compt; i++) {
+    fprintf(out_file, "mpc_clear(T%d)\n",i);
+  }
+}
 
 int main(int argc, char* argv[]) {
 
@@ -49,6 +80,7 @@ int main(int argc, char* argv[]) {
   // opens a file to write the result in it
   out_file = fopen("result.c", "w");
   yyparse();
+  end_file();
   fclose(out_file);
 
   return 0;
