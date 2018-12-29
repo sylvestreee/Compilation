@@ -19,17 +19,33 @@ void quadFree(quad *quad)
     free(quad);
 }
 
-void quadAdd(quad **dest, quad *src)
+/**
+ * Add a quad to a list of quad
+ * Params:
+ * Adress of a list of quads
+ * Quad to add
+ */
+void quadAdd(quad **quadList, quad *newQuad)
 {
-    if(src != NULL)
+    if(newQuad != NULL && quadList != NULL)
     {
-        quad *current = dest[0];
-        while (current->next != NULL)
-        {
-            current = current->next;
+        // the list is empty
+        if(quadList[0] == NULL) {
+            quadList[0] = newQuad;
+
+        } else {
+            // add the new quad at the end of the lis
+            quad *current = quadList[0];
+            while (current->next != NULL)
+            {
+                current = current->next;
+            }
+            current->next = newQuad;
+            newQuad->next = NULL;
         }
-        current->next = src;
-        src->next = NULL;
+
+        // DEBUG
+        quadPrint(newQuad);
     }
 }
 
