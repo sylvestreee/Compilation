@@ -13,8 +13,8 @@ quad *quadInit(char op, symbol *arg1, symbol *arg2, symbol *res) {
     return new;
 }
 
-void quadFree(quad *quad) {
-    free(quad);
+void quadFree(quad *q) {
+    free(q);
 }
 
 /**
@@ -46,19 +46,76 @@ void quadAdd(quad **quadList, quad *newQuad) {
     }
 }
 
-void quadPrint(quad *quad) {
-    if(quad->arg2 != NULL) { // if 2 args
+void quadPrint(quad *q) {
+    if(q->arg2 != NULL) { // if 2 args
+        switch(q->op) {
+          case '+' :
+            printf("mpc_add(%s, %s, %s, arrondi)\n",
+              q->arg1->id,
+              q->arg2->id,
+              q->res->id
+            );
+            break;
+
+          case '-' :
+            printf("mpc_sub(%s, %s, %s, arrondi)\n",
+              q->arg1->id,
+              q->arg2->id,
+              q->res->id
+            );
+            break;
+
+          case '*' :
+            printf("mpc_mult(%s, %s, %s, arrondi)\n",
+              q->arg1->id,
+              q->arg2->id,
+              q->res->id
+            );
+            break;
+
+          case '/' :
+            printf("mpc_div(%s, %s, %s, arrondi)\n",
+              q->arg1->id,
+              q->arg2->id,
+              q->res->id
+            );
+            break;
+
+          case '<' :
+          case '>' :
+          case 's' :
+          case 'i' :
+            printf("mpc_cmp(%s, %s)\n",
+              q->arg1->id,
+              q->arg2->id
+            );
+            break;
+
+          default :
+            break;
+        }
         printf("%s = %s(%d) %c %s(%d)\n",
-            quad->res->id,
-            quad->arg1->id,quad->arg1->value,
-            quad->op,
-            quad->arg2->id,quad->arg2->value
+            q->res->id,
+            q->arg1->id,q->arg1->value,
+            q->op,
+            q->arg2->id,q->arg2->value
         );
     } else {
         printf("%s = %c %s(%d)\n",
-            quad->res->id,
-            quad->op,
-            quad->arg1->id,quad->arg1->value
+            q->res->id,
+            q->op,
+            q->arg1->id,q->arg1->value
         );
     }
+}
+
+void listQuadPrint(quad *q) {
+  if(q != NULL) {
+    quad *quad_temp = (quad *)malloc(sizeof(quad));
+    quad_temp = q;
+    while(quad_temp != NULL) {
+      quadPrint(quad_temp);
+      quad_temp = quad_temp->next;
+    }
+  }
 }
