@@ -4,7 +4,7 @@
 	#include "y.tab.h"
 
 	char* library = NULL;
-	int precision = 0;
+	int num_precision = 0;
 	char* rounding = NULL;
 %}
 
@@ -14,28 +14,28 @@ PRECISION		precision
 ROUNDING		rounding
 FUNCTION		sqrt|pow
 CST					[A-Z_]*
-SPACE				[ \t]
-NEWLINE			[\n]
+SPACE				[ \t]+
+NEWLINE			[\n]+
 IDENTIFIER	[a-zA-Z_][a-zA-Z0-9_]*
 INTEGER			[0-9]+
 FLOAT				[0-9]*\.[0-9]+
 OPERATORS 	[(){}+*-/=,;><!]
 %%
 
-{PRAGMA}			{ return PRAGMA;}
+{PRAGMA}			{ return pragma;}
 {LIBRARY}			{
 								yylval.text=yytext;
-								return LIBRARY;
+								return bibli;
 							}
-{PRECISION}		{ return PRECISION;}
-{ROUNDING}		{ return ROUNDING;}
+{PRECISION}		{ return precision;}
+{ROUNDING}		{ return arrondi;}
 {FUNCTION}		{
 								yylval.text=yytext;
-								return FUNC;
+								return fonction;
 							}
 {CST}					{
 								yylval.text=yytext;
-								return CST;
+								return cst;
 							}
 {IDENTIFIER} 	{
 								yylval.text=yytext;
@@ -47,11 +47,11 @@ OPERATORS 	[(){}+*-/=,;><!]
 							}
 {FLOAT}				{
 								yylval.flottant=atof(yytext);
-								return FLOTTANT;
+								return n_flottant;
 							}
 {OPERATORS}   { return yytext[0];}
 
-{SPACE}				{ printf("%s", yytext); }
-{NEWLINE}			{ return yytext[0]; }
+{SPACE}				{ }
+{NEWLINE}			{ return retour; }
 .							{ printf("%s", yytext); }
 %%

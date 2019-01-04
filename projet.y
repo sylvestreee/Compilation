@@ -25,19 +25,20 @@
 	int entier_lex;
 };
 
-%token PRAGMA
-%token <text> LIBRARY
-%token <entier_lex> PRECISION
-%token <entier_lex> ROUNDING
-%token <text> CST
+%token pragma
+%token retour
+%token <text> bibli
+%token <entier_lex> precision
+%token <entier_lex> arrondi
+%token <text> cst
 %token <text> ID
 %token <entier_lex> ENTIER
-%token <flottant> FLOTTANT
-%token <text> FUNC
+%token <flottant> n_flottant
+%token <text> fonction
 
-%type <codegen> E ligne
+%type <codegen> E LIGNES L_PRAGMA
 
-%start ligne
+%start L_PRAGMA
 %left '+' '-'
 %left '*' '/'
 %left '<' '>'
@@ -46,10 +47,35 @@
 
 %%
 
-ligne : E '\n'
-							{
-								symbolTablePrint(&symbolTable);
-							}
+L_PRAGMA :
+pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
+      {
+        symbolTablePrint(&symbolTable);
+      }
+
+ARGUMENT :
+  precision '(' ENTIER ')'
+    {
+      //
+    }
+
+  | arrondi '(' cst ')'
+    {
+      //
+    }
+  ;
+
+LIGNES :
+  E retour LIGNES
+    {
+      //
+    }
+
+  | E retour
+    {
+      //
+    }
+  ;
 
 E :
 	//'-' E
@@ -147,3 +173,26 @@ E :
 						}
 	;
 %%
+
+int main(int argc, char* argv[]) {
+
+  if(argc == 2) {
+    yyin = fopen(argv[1], "r");
+    if (yyin == NULL) {
+      printf ("File doesn't exist\n");
+      return 1;
+    }
+
+    // opens a file to write the result in it
+    out_file = fopen("result.c", "w");
+    yyparse();
+    end_file(compt, out_file);
+    fclose(out_file);
+
+  } else {
+    yyparse();
+  }
+
+
+  return 0;
+}
