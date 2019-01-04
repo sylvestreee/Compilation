@@ -26,7 +26,7 @@ symbol* symbolNewTemp(symbol **TS) {
 
 symbol* symbolLookup(symbol *TS, char *name) {
     while(TS) {
-        if(strcmp(name,TS->id) == 0) {
+        if(strcmp(name, TS->id) == 0) {
             return TS;
         }
         TS = TS->next;
@@ -54,7 +54,7 @@ symbol *symbolAdd(symbol **TS, char *name) {
 void symbolTablePrint(symbol **TS) {
     printf("___________\n");
     printf("Symbol Table\n");
-    
+
     if(*TS != NULL) {
         symbol *current = *TS;
         while(current->next != NULL) {
