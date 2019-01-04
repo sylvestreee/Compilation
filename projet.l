@@ -16,10 +16,10 @@ FUNCTION		sqrt|pow
 CST					[A-Z_]*
 SPACE				[ \t]
 NEWLINE			[\n]
-IDENTIFIER	[a-zA-Z_][a-zA-Z_0-9]*
+IDENTIFIER	[a-zA-Z_][a-zA-Z0-9_]*
 INTEGER			[0-9]+
 FLOAT				[0-9]*\.[0-9]+
-OPERATORS 	[(){}+*-/=,;]
+OPERATORS 	[(){}*+-/=,;]
 %%
 
 {PRAGMA}			{ return PRAGMA;}

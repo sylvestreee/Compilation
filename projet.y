@@ -46,7 +46,7 @@
 
 ligne : E '\n'
               {
-                // $$=$1;
+                symbolTablePrint(&symbolTable);
               }
 
 E :
@@ -76,18 +76,20 @@ E :
               $$.result = $2.result;
               $$.code = $2.code;
             }
-  // | ID
-  //   {
-  //     struct symbol* newSymbol = symbolLookup(TdS, $1);
-  //     if(newSymbol == NULL)
-  //       newSymbol = symbolAdd(&TdS);
-  //     $$.result = newSymbol;
-  //     $$.code = NULL;
-  //   }
+  | ID
+            {
+              // add ID only if it's not in symbol table
+              symbol* newSymbol = symbolLookup(symbolTable, $1);
+              if(newSymbol == NULL) {
+                newSymbol = symbolAdd(&symbolTable, $1);
+              }
+              // get the initial name
+              $$.result = newSymbol;
+              $$.code = NULL;
+            }
   | ENTIER
             {
               symbol* newSymbol = symbolNewTemp(&symbolTable);
-              // printf("Cet entier a comme id : %s\n", newSymbol->id);
               newSymbol->isConstant = true;
               newSymbol->value = $1;
               $$.result = newSymbol;

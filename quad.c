@@ -41,6 +41,7 @@ void quadAdd(quad **quadList, quad *newQuad) {
         }
 
         // DEBUG
+        printf("New quad:\n");
         quadPrint(newQuad);
     }
 }
