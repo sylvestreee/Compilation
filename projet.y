@@ -48,151 +48,150 @@
 %%
 
 L_PRAGMA :
-pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
-      {
-        symbolTablePrint(&symbolTable);
-      }
+	pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
+	{
+		symbolTablePrint(&symbolTable);
+	}
 
 ARGUMENT :
-  precision '(' ENTIER ')'
-    {
-      //
-    }
+	precision '(' ENTIER ')'
+	{
+		//
+	}
 
-  | arrondi '(' cst ')'
-    {
-      //
-    }
-  ;
+	| arrondi '(' cst ')'
+	{
+		//
+	}
+	;
 
 LIGNES :
-  E retour LIGNES
-    {
-      //
-    }
+	E retour LIGNES
+	{
+		//
+	}
 
-  | E retour
-    {
-      //
-    }
-  ;
+	| E retour
+	{
+		//
+	}
+	;
 
 E :
-	//'-' E
-					//  {
-							// #TODO
-					//  }
+	// '-' E
+	// {
+	// 	// #TODO
+	// }
 
 	E '+' E
-						{
-							$$.result = symbolNewTemp(&symbolTable);
-							$$.code = $1.code;
-							quadAdd(&$$.code, $3.code);
-							quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
-						}
+	{
+		$$.result = symbolNewTemp(&symbolTable);
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
+	}
 
 	| E '-' E
-						{
-							$$.result = symbolNewTemp(&symbolTable);
-							$$.code = $1.code;
-							quadAdd(&$$.code, $3.code);
-							quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
-						}
+	{
+		$$.result = symbolNewTemp(&symbolTable);
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
+	}
 
 	| E '*' E
-						{
-							$$.result = symbolNewTemp(&symbolTable);
-							$$.code = $1.code;
-							quadAdd(&$$.code, $3.code);
-							quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
-						}
+	{
+		$$.result = symbolNewTemp(&symbolTable);
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
+	}
 
 	| E '/' E
-						{
-							$$.result = symbolNewTemp(&symbolTable);
-							$$.code = $1.code;
-							quadAdd(&$$.code, $3.code);
-							quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
-						}
+	{
+		$$.result = symbolNewTemp(&symbolTable);
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
+	}
 
 	| E '>' E
-						{
-							$$.result = NULL;
-							$$.code = $1.code;
-							quadAdd(&$$.code, $3.code);
-							quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
-						}
+	{
+		$$.result = NULL;
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
+	}
 
 	| E '<' E
-						{
-							$$.result = NULL;
-							$$.code = $1.code;
-							quadAdd(&$$.code, $3.code);
-							quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
-						}
+	{
+		$$.result = NULL;
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
+	}
 
 	| E '>''=' E
-						{
-							$$.result = NULL;
-							$$.code = $1.code;
-							quadAdd(&$$.code, $4.code);
-							quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
-						}
+	{
+		$$.result = NULL;
+		$$.code = $1.code;
+		quadAdd(&$$.code, $4.code);
+		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
+	}
 
 	| E '<''=' E
-						{
-							$$.result = NULL;
-							$$.code = $1.code;
-							quadAdd(&$$.code, $4.code);
-							quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
-						}
+	{
+		$$.result = NULL;
+		$$.code = $1.code;
+		quadAdd(&$$.code, $4.code);
+		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
+	}
 
 	| '(' E ')'
-						{
-							$$.result = $2.result;
-							$$.code = $2.code;
-						}
+	{
+		$$.result = $2.result;
+		$$.code = $2.code;
+	}
 	| ID
-						{
-							// add ID only if it's not in symbol table
-							symbol* newSymbol = symbolLookup(symbolTable, $1);
-							if(newSymbol == NULL) {
-								newSymbol = symbolAdd(&symbolTable, $1);
-							}
-							// get the initial name
-							$$.result = newSymbol;
-							$$.code = NULL;
-						}
+	{
+		// add ID only if it's not in symbol table
+		symbol* newSymbol = symbolLookup(symbolTable, $1);
+		if(newSymbol == NULL) {
+			newSymbol = symbolAdd(&symbolTable, $1);
+		}
+		// get the initial name
+		$$.result = newSymbol;
+		$$.code = NULL;
+	}
 	| ENTIER
-						{
-							symbol* newSymbol = symbolNewTemp(&symbolTable);
-							newSymbol->isConstant = true;
-							newSymbol->value = $1;
-							$$.result = newSymbol;
-							$$.code = NULL;
-						}
+	{
+		symbol* newSymbol = symbolNewTemp(&symbolTable);
+		newSymbol->isConstant = true;
+		newSymbol->value = $1;
+		$$.result = newSymbol;
+		$$.code = NULL;
+	}
 	;
 %%
 
 int main(int argc, char* argv[]) {
 
-  if(argc == 2) {
-    yyin = fopen(argv[1], "r");
-    if (yyin == NULL) {
-      printf ("File doesn't exist\n");
-      return 1;
-    }
+	if(argc == 2) {
+		yyin = fopen(argv[1], "r");
+		if(yyin == NULL) {
+			printf("File doesn't exist\n");
+			return 1;
+		}
 
-    // opens a file to write the result in it
-    out_file = fopen("result.c", "w");
-    yyparse();
-    end_file(compt, out_file);
-    fclose(out_file);
+		// opens a file to write the result in it
+		out_file = fopen("result.c", "w");
+		yyparse();
+		end_file(compt, out_file);
+		fclose(out_file);
 
-  } else {
-    yyparse();
-  }
-
-
-  return 0;
+	} else {
+		yyparse();
+	}
+	
+	return 0;
 }

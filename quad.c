@@ -4,11 +4,11 @@
 #include <stdio.h>
 
 quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res) {
-	quad* new = (quad* )malloc(sizeof(quad));
-	new->arg1 = arg1;
-	new->arg2 = arg2;
-	new->op = op;
-	new->res = res;
+	quad* new 	= (quad* )malloc(sizeof(quad));
+	new->arg1 	= arg1;
+	new->arg2 	= arg2;
+	new->op 	= op;
+	new->res 	= res;
 
 	return new;
 }
@@ -24,18 +24,18 @@ void quadFree(quad* q) {
  * Quad to add
  */
 void quadAdd(quad** quadList, quad* newQuad) {
-	if((newQuad != NULL) && (quadList != NULL))
-	{
+	if((newQuad != NULL) && (quadList != NULL)) {
 		// the list is empty
 		if(quadList[0] == NULL) {
 			quadList[0] = newQuad;
 
 		} else {
-		// add the new quad at the end of the lis
+			// add the new quad at the end of the lis
 			quad* current = quadList[0];
 			while(current->next != NULL) {
 				current = current->next;
 			}
+
 			current->next = newQuad;
 			newQuad->next = NULL;
 		}
@@ -93,21 +93,21 @@ void quadPrint(quad* q) {
 
 			default :
 				printf("%s = %s(%d) %c %s(%d)\n",
-						q->res->id,
-						q->arg1->id,q->arg1->value,
-						q->op,
-						q->arg2->id,q->arg2->value
+					q->res->id,
+					q->arg1->id,q->arg1->value,
+					q->op,
+					q->arg2->id,q->arg2->value
 				);
 				break;
 		}
 
-		} else {
-				printf("%s = %c %s(%d)\n",
-						q->res->id,
-						q->op,
-						q->arg1->id,q->arg1->value
-				);
-		}
+	} else {
+		printf("%s = %c %s(%d)\n",
+			q->res->id,
+			q->op,
+			q->arg1->id,q->arg1->value
+		);
+	}
 }
 
 void listQuadPrint(quad *q) {

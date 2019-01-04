@@ -3,20 +3,19 @@
 
 #include <stdbool.h>
 
-typedef struct symbolS
-{
-    char *id;
-    bool isConstant;
-    int value;
-    struct symbolS *next;
+typedef struct symbolS {
+	char *id;
+	bool isConstant;
+	int value;
+	struct symbolS *next;
 } symbol;
 
 symbol* symbolAlloc();
-void symbolFree(symbol*);
-symbol* symbolNewTemp(symbol**);
-symbol* symbolLookup(symbol*, char*);
-symbol* symbolAdd(symbol**, char*);
+void symbolFree(symbol* sym);
+symbol* symbolNewTemp(symbol** TS);
+symbol* symbolLookup(symbol* TS, char* name);
+symbol* symbolAdd(symbol** TS, char* name);
 void symbolTablePrint(symbol **TS);
-void symbolPrint(symbol*);
+void symbolPrint(symbol* sym);
 
 #endif
