@@ -66,7 +66,7 @@ ARGUMENT :
   ;
 
 LIGNES :
-  E retour E
+  E retour LIGNES
     {
       //
     }
