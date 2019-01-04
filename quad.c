@@ -47,6 +47,52 @@ void quadAdd(quad **quadList, quad *newQuad) {
 
 void quadPrint(quad *quad) {
     if(quad->arg2 != NULL) { // if 2 args
+        switch(quad->op) {
+          case '+' :
+            printf("mpc_add(%s, %s, %s, arrondi)\n",
+              quad->arg1->id,
+              quad->arg2->id,
+              quad->res->id
+            );
+            break;
+
+          case '-' :
+            printf("mpc_sub(%s, %s, %s, arrondi)\n",
+              quad->arg1->id,
+              quad->arg2->id,
+              quad->res->id
+            );
+            break;
+
+          case '*' :
+            printf("mpc_mult(%s, %s, %s, arrondi)\n",
+              quad->arg1->id,
+              quad->arg2->id,
+              quad->res->id
+            );
+            break;
+
+          case '/' :
+            printf("mpc_div(%s, %s, %s, arrondi)\n",
+              quad->arg1->id,
+              quad->arg2->id,
+              quad->res->id
+            );
+            break;
+
+          case '<' :
+          case '>' :
+          case 's' :
+          case 'i' :
+            printf("mpc_cmp(%s, %s)\n",
+              quad->arg1->id,
+              quad->arg2->id
+            );
+            break;
+
+          default :
+            break;
+        }
         printf("%s = %s(%d) %c %s(%d)\n",
             quad->res->id,
             quad->arg1->id,quad->arg1->value,
@@ -60,4 +106,14 @@ void quadPrint(quad *quad) {
             quad->arg1->id,quad->arg1->value
         );
     }
+}
+
+void listQuadPrint(quad *quad) {
+  if(quad != NULL) {
+    quad *quad_temp = quad;
+    while(quad_temp != NULL) {
+      quadPrint(quad_temp);
+      quad_temp = quad_temp->next;
+    }
+  }
 }

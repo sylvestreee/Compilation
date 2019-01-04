@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
   out_file = fopen("result.c", "w");
   yyparse();
   end_file(compt);
-  fclose(out_file, out_file);
+  fclose(out_file);
 
   return 0;
 }
