@@ -16,6 +16,7 @@ void symbolFree(symbol*);
 symbol* symbolNewTemp(symbol**);
 symbol* symbolLookup(symbol*, char*);
 symbol* symbolAdd(symbol**, char*);
+void symbolTablePrint(symbol **TS);
 void symbolPrint(symbol*);
 
 #endif

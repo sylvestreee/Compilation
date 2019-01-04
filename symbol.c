@@ -12,7 +12,7 @@ symbol* symbolAlloc()
 
 void symbolFree(symbol *sym)
 {
-    if(sym != NULL){
+    if(sym != NULL) {
         free(sym);
     }
 }
@@ -22,6 +22,7 @@ symbol* symbolNewTemp(symbol **TS)
     char buffer[1024];
     static int cptTemp = 0;
     snprintf(buffer, 1024, "temp_%d", cptTemp);
+    cptTemp++;
 
     return symbolAdd(TS, buffer);
 }
@@ -43,6 +44,7 @@ symbol *symbolAdd(symbol **TS, char *name)
 {
     symbol *new = symbolAlloc();
     new->id = strdup(name);
+
     if(*TS == NULL)
     {
         *TS = new;
@@ -57,7 +59,22 @@ symbol *symbolAdd(symbol **TS, char *name)
         }
         current->next = new;
     }
-    return *TS;
+    return new;
+}
+
+void symbolTablePrint(symbol **TS)
+{
+    printf("___________\n");
+    printf("Symbol Table\n");
+    if(*TS != NULL) {
+        symbol *current = *TS;
+        while(current->next != NULL)
+        {
+            symbolPrint(current);
+            current = current->next;
+        }
+    }
+    printf("___________\n");
 }
 
 void symbolPrint(symbol *sym)

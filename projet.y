@@ -87,6 +87,7 @@ E :
   | ENTIER
             {
               symbol* newSymbol = symbolNewTemp(&symbolTable);
+              // printf("Cet entier a comme id : %s\n", newSymbol->id);
               newSymbol->isConstant = true;
               newSymbol->value = $1;
               $$.result = newSymbol;
