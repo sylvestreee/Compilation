@@ -18,6 +18,7 @@ symbol* symbolLookup(symbol* TS, char* name);
 symbol* symbolAdd(symbol** TS, char* name);
 void symbolTablePrint(symbol **TS);
 void symbolPrint(symbol* sym);
-void initVariables(symbol** TS, FILE* out_file, char* library, int precision);
+void initVariables(symbol** TS, FILE* out_file, char* library, int precision, char* rounding);
+void desallocVariables(symbol** TS, FILE* out_file);
 
 #endif

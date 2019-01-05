@@ -52,73 +52,81 @@ void quadAdd(quad** quadList, quad* newQuad) {
  * q the quad to print
  * out_file the optional file to use
  */
-void quadPrint(quad* q, FILE* out_file) {
+void quadPrint(quad* q, FILE* out_file, char* rounding) {
 	if(q->arg2 != NULL) { // if 2 args
 		switch(q->op) {
 			case '+' :
 				if(out_file == NULL) {
-					printf("mpc_add(%s, %s, %s, arrondi)\n",
+					printf("mpc_add(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_add(%s, %s, %s, arrondi)\n",
+						"mpc_add(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				}
 				break;
 
 			case '-' :
 				if(out_file == NULL) {
-					printf("mpc_sub(%s, %s, %s, arrondi)\n",
+					printf("mpc_sub(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_sub(%s, %s, %s, arrondi)\n",
+						"mpc_sub(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				}
 				break;
 
 			case '*' :
 				if(out_file == NULL) {
-					printf("mpc_mult(%s, %s, %s, arrondi)\n",
+					printf("mpc_mult(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_mult(%s, %s, %s, arrondi)\n",
+						"mpc_mult(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				}
 				break;
 
 			case '/' :
 				if(out_file == NULL) {
-					printf("mpc_div(%s, %s, %s, arrondi)\n",
+					printf("mpc_div(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_div(%s, %s, %s, arrondi)\n",
+						"mpc_div(%s, %s, %s, %s)\n",
 						q->arg1->id,
 						q->arg2->id,
-						q->res->id
+						q->res->id,
+						rounding
 					);
 				}
 				break;
@@ -170,13 +178,14 @@ void quadPrint(quad* q, FILE* out_file) {
 	}
 }
 
-void listQuadPrint(quad *q, FILE* out_file) {
+void listQuadPrint(quad *q, FILE* out_file, char* rounding) {
 	if(q != NULL) {
 		quad* quad_temp = (quad* )malloc(sizeof(quad));
 		quad_temp = q;
 		while(quad_temp != NULL) {
-			quadPrint(quad_temp, out_file);
+			quadPrint(quad_temp, out_file, rounding);
 			quad_temp = quad_temp->next;
 		}
 	}
+	fprintf(out_file, "\n");
 }

@@ -62,9 +62,10 @@ L_PRAGMA :
 	{
 		symbolTablePrint(&symbolTable);
 
-		initVariables(&symbolTable, out_file, library, num_precision);
+		initVariables(&symbolTable, out_file, library, num_precision, rounding);
 		$$.code = $7.code;
-		listQuadPrint($$.code, out_file);
+		listQuadPrint($$.code, out_file, rounding);
+		desallocVariables(&symbolTable, out_file);
 	}
 
 OTHER:
@@ -105,6 +106,7 @@ LIGNES :
 	| E retour
 	{
 		$$.code = $1.code;
+		$$.result = $1.result;
 	}
 	;
 
@@ -120,9 +122,6 @@ E :
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
-
-		printf("Code +\n");
-		listQuadPrint($$.code, NULL);
 	}
 
 	| E '-' E

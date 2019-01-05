@@ -18,7 +18,7 @@ void symbolFree(symbol* sym) {
 symbol* symbolNewTemp(symbol** TS) {
 	char buffer[1024];
 	static int cptTemp = 0;
-	snprintf(buffer, 1024, "temp_%d", cptTemp);
+	snprintf(buffer, 1024, "T%d", cptTemp);
 	cptTemp++;
 
 	return symbolAdd(TS, buffer);
@@ -76,13 +76,14 @@ void symbolPrint(symbol* sym) {
  * @TODO : choose library & precision
  * Args:
  * Table of symbols containing the temporary variables
- * File to completes
+ * File to complete
  */
-void initVariables(symbol** TS, FILE* out_file, char* library, int precision) {
+void initVariables(symbol** TS, FILE* out_file, char* library, int precision, char* rounding) {
 	if((*TS != NULL) && (out_file != NULL)) {
 		symbol* current = *TS;
 
 		while(current->next != NULL) {
+			// create variable
 			fprintf(
 				out_file,
 				"mpc_t %s; mpc_init2(%s, %d);\n",
@@ -90,8 +91,42 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision) {
 				current->id,
 				precision
 			);
+			// if it has a value, set it
+			if(current->isConstant) {
+				fprintf(
+					out_file,
+					"mpc_set_si(%s, %d, %s);\n",
+					current->id,
+					current->value,
+					rounding
+				);
+			}
+
+			fprintf(out_file, "\n");
+			current = current->next;
+		}
+	}
+}
+/**
+ * Print all variables desallocations in a file
+ * Args:
+ * Table of symbols containing the temporary variables
+ * File to complete
+ */
+void desallocVariables(symbol** TS, FILE* out_file) {
+	if((*TS != NULL) && (out_file != NULL)) {
+		symbol* current = *TS;
+
+		while(current->next != NULL) {
+			fprintf(
+				out_file,
+				"mpc_clear(%s);\n",
+				current->id
+			);
 
 			current = current->next;
 		}
 	}
+
+
 }
