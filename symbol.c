@@ -61,6 +61,8 @@ void symbolTablePrint(symbol** TS) {
 			symbolPrint(current);
 			current = current->next;
 		}
+
+		symbolPrint(current);
 	}
 	printf("___________\n");
 }
@@ -88,7 +90,6 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 
 		while(current->next != NULL) {
 			// create variable
-
 			fprintf(
 				out_file,
 				"%s_t %s; %s_init2(%s, %d);\n",
@@ -114,6 +115,32 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 			fprintf(out_file, "\n");
 			current = current->next;
 		}
+
+		// same with last symbol
+		// create variable
+		fprintf(
+			out_file,
+			"%s_t %s; %s_init2(%s, %d);\n",
+			prefixe,
+			current->id,
+			prefixe,
+			current->id,
+			precision
+		);
+
+		// if it has a value, set it
+		if(current->isConstant) {
+			fprintf(
+				out_file,
+				"%s_set_si(%s, %d, %s);\n",
+				prefixe,
+				current->id,
+				current->value,
+				rounding
+			);
+		}
+
+		fprintf(out_file, "\n");
 	}
 }
 /**
@@ -141,5 +168,13 @@ void desallocVariables(symbol** TS, FILE* out_file, char* library) {
 
 			current = current->next;
 		}
+
+		// same with last symbol
+		fprintf(
+			out_file,
+			"%s_clear(%s);\n",
+			prefixe,
+			current->id
+		);
 	}
 }

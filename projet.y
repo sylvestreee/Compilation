@@ -64,10 +64,13 @@ START : OTHER L_PRAGMA OTHER
 			printf("%s\n", $1);
 			printf("%s\n", $3);
 		} else {
+			// before the pragma
 			fprintf(out_file, "%s\n\n", $1);
+			// pragma content
 			initVariables(&symbolTable, out_file, library, num_precision, rounding);
 			listQuadPrint($2.code, out_file, rounding, library);
 			desallocVariables(&symbolTable, out_file, library);
+			// after the pragma
 			fprintf(out_file, "\n%s\n", $3);
 		}
 	}
@@ -76,34 +79,30 @@ START : OTHER L_PRAGMA OTHER
 L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' LIGNES '}' retour
 	{
+		// get the library to use
 		library = $2;
 
+		// debug : print the symbol table when it is fully built
 		symbolTablePrint(&symbolTable);
+
 		$$.code = $6.code;
 	}
 
 OTHER:
 	PONCT retour
 	{
-		//printf("ponct3 %s\n",$1);
 		$$ = $1;
 	}
 	| PONCT OTHER
 	{
-		// printf("ponct %s\n",$1 );
-		// printf("ponct 2%s\n", $2);
-
 		$$ = strcat(strcat($1," "),$2);
 	}
 	| TEXTE OTHER
 	{
-		// printf("texte  1 %s\n", $1);
-		// printf("texte 2 %s\n", $2);
 		$$ = strcat(strcat($1," "),$2);
 	}
 	| TEXTE retour
 	{
-		//printf("texte %s\n", $1);
 		$$ = strcat($1," ");
 	}
 	| ENTIER_LEX OTHER
@@ -253,7 +252,6 @@ E :
 		if(newSymbol == NULL) {
 			newSymbol = symbolAdd(&symbolTable, $1);
 		}
-		// get the initial name
 		$$.result = newSymbol;
 		$$.code = NULL;
 	}
