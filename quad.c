@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res) {
+quad* quadInit(char* op, symbol* arg1, symbol* arg2, symbol* res) {
 	quad* new 	= (quad* )malloc(sizeof(quad));
 	new->arg1 	= arg1;
 	new->arg2 	= arg2;
@@ -60,137 +60,145 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 	}
 
 	if(q->arg2 != NULL) { // if 2 args
-		switch(q->op) {
-			case '+' :
-				if(out_file == NULL) {
-					printf("%s_add(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				} else {
-					fprintf(out_file,
-						"%s_add(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				}
-				break;
+		// ADDITION
+		if(strcmp(q->op, "+") == 0) {
+			if(out_file == NULL) {
+				printf("%s_add(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			} else {
+				fprintf(out_file,
+					"%s_add(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			}
 
-			case '-' :
-				if(out_file == NULL) {
-					printf("%s_sub(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				} else {
-					fprintf(out_file,
-						"%s_sub(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				}
-				break;
+		// SUBSTRACTION
+		} else if(strcmp(q->op, "-") == 0) {
+			if(out_file == NULL) {
+				printf("%s_sub(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			} else {
+				fprintf(out_file,
+					"%s_sub(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			}
 
-			case '*' :
-				if(out_file == NULL) {
-					printf("%s_mult(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				} else {
-					fprintf(out_file,
-						"%s_mult(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				}
-				break;
+		// MULTIPLICATION
+		} else if(strcmp(q->op, "*") == 0) {
+			if(out_file == NULL) {
+				printf("%s_mult(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			} else {
+				fprintf(out_file,
+					"%s_mult(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			}
 
-			case '/' :
-				if(out_file == NULL) {
-					printf("%s_div(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				} else {
-					fprintf(out_file,
-						"%s_div(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
-				}
-				break;
+		// DIVISION
+		} else if(strcmp(q->op, "/") == 0) {
+			if(out_file == NULL) {
+				printf("%s_div(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			} else {
+				fprintf(out_file,
+					"%s_div(%s, %s, %s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id,
+					q->res->id,
+					rounding
+				);
+			}
 
-			case '<' :
-			case '>' :
-			case 's' :
-			case 'i' :
-				if(out_file == NULL) {
-					printf("%s_cmp(%s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id
-					);
-				} else {
-					fprintf(out_file,
-						"%s_cmp(%s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id
-					);
-				}
-				break;
+		// BOOLEANS
+		} else if((strcmp(q->op, "<") == 0) || (strcmp(q->op, ">") == 0)
+		 	|| (strcmp(q->op, "s") == 0) || (strcmp(q->op, "i") == 0)) {
 
-			default :
-				if(out_file == NULL) {
-					printf("%s = %s(%d) %c %s(%d)\n",
-						q->res->id,
-						q->arg1->id,q->arg1->value,
-						q->op,
-						q->arg2->id,q->arg2->value
-					);
-				} else {
-					fprintf(out_file,
-						"%s = %s(%d) %c %s(%d)\n",
-						q->res->id,
-						q->arg1->id,q->arg1->value,
-						q->op,
-						q->arg2->id,q->arg2->value
-					);
-				}
-				break;
+			if(out_file == NULL) {
+				printf("%s_cmp(%s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id
+				);
+			} else {
+				fprintf(out_file,
+					"%s_cmp(%s, %s)\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id
+				);
+			}
+
+		// DEFAULT
+		} else {
+			if(out_file == NULL) {
+				printf("%s = %s(%d) %s %s(%d)\n",
+					q->res->id,
+					q->arg1->id,q->arg1->value,
+					q->op,
+					q->arg2->id,q->arg2->value
+				);
+			} else {
+				fprintf(out_file,
+					"%s = %s(%d) %s %s(%d)\n",
+					q->res->id,
+					q->arg1->id,q->arg1->value,
+					q->op,
+					q->arg2->id,q->arg2->value
+				);
+			}
 		}
 
+	// FUNCTIONS
 	} else {
-		printf("%s = %c %s(%d)\n",
-			q->res->id,
-			q->op,
-			q->arg1->id,q->arg1->value
-		);
+		if(out_file == NULL) {
+			printf("%s_%s(%s)\n",
+				prefixe,
+				q->op,
+				q->arg1->id
+			);
+		} else {
+			fprintf(out_file,
+				"%s_%s(%s)\n",
+				prefixe,
+				q->op,
+				q->arg1->id
+			);
+		}
 	}
 }
 

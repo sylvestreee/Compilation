@@ -196,7 +196,7 @@ E :
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("+", $1.result, $3.result, $$.result));
 	}
 
 	| E '-' E
@@ -204,7 +204,7 @@ E :
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("-", $1.result, $3.result, $$.result));
 	}
 
 	| E '*' E
@@ -212,7 +212,7 @@ E :
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("*", $1.result, $3.result, $$.result));
 	}
 
 	| E '/' E
@@ -220,7 +220,7 @@ E :
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("/", $1.result, $3.result, $$.result));
 	}
 
 	| E '>' E
@@ -228,7 +228,7 @@ E :
 		$$.result = NULL;
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit(">", $1.result, $3.result, $$.result));
 	}
 
 	| E '<' E
@@ -236,7 +236,7 @@ E :
 		$$.result = NULL;
 		$$.code = $1.code;
 		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("<", $1.result, $3.result, $$.result));
 	}
 
 	| E '>''=' E
@@ -244,7 +244,7 @@ E :
 		$$.result = NULL;
 		$$.code = $1.code;
 		quadAdd(&$$.code, $4.code);
-		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
+		quadAdd(&$$.code, quadInit("s", $1.result, $4.result, $$.result));
 	}
 
 	| E '<''=' E
@@ -252,7 +252,7 @@ E :
 		$$.result = NULL;
 		$$.code = $1.code;
 		quadAdd(&$$.code, $4.code);
-		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
+		quadAdd(&$$.code, quadInit("i", $1.result, $4.result, $$.result));
 	}
 
 	| '(' E ')'
@@ -260,6 +260,14 @@ E :
 		$$.result = $2.result;
 		$$.code = $2.code;
 	}
+
+	| fonction '(' E ')'
+	{
+		$$.result = symbolNewTemp(&symbolTable);
+		$$.code = $3.code;
+		quadAdd(&$$.code, quadInit($1, $3.result, NULL, $$.result));
+	}
+
 	| ID
 	{
 		// add ID only if it's not in symbol table
