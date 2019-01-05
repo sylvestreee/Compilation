@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res) {
 	quad* new 	= (quad* )malloc(sizeof(quad));
@@ -52,12 +53,18 @@ void quadAdd(quad** quadList, quad* newQuad) {
  * q the quad to print
  * out_file the optional file to use
  */
-void quadPrint(quad* q, FILE* out_file, char* rounding) {
+void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
+	char* prefixe = "mpc";
+	if(strcmp(library, "MPFR") == 0) {
+		prefixe = "mpfr";
+	}
+
 	if(q->arg2 != NULL) { // if 2 args
 		switch(q->op) {
 			case '+' :
 				if(out_file == NULL) {
-					printf("mpc_add(%s, %s, %s, %s)\n",
+					printf("%s_add(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -65,7 +72,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_add(%s, %s, %s, %s)\n",
+						"%s_add(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -76,7 +84,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 
 			case '-' :
 				if(out_file == NULL) {
-					printf("mpc_sub(%s, %s, %s, %s)\n",
+					printf("%s_sub(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -84,7 +93,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_sub(%s, %s, %s, %s)\n",
+						"%s_sub(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -95,7 +105,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 
 			case '*' :
 				if(out_file == NULL) {
-					printf("mpc_mult(%s, %s, %s, %s)\n",
+					printf("%s_mult(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -103,7 +114,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_mult(%s, %s, %s, %s)\n",
+						"%s_mult(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -114,7 +126,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 
 			case '/' :
 				if(out_file == NULL) {
-					printf("mpc_div(%s, %s, %s, %s)\n",
+					printf("%s_div(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -122,7 +135,8 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_div(%s, %s, %s, %s)\n",
+						"%s_div(%s, %s, %s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -136,13 +150,15 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 			case 's' :
 			case 'i' :
 				if(out_file == NULL) {
-					printf("mpc_cmp(%s, %s)\n",
+					printf("%s_cmp(%s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id
 					);
 				} else {
 					fprintf(out_file,
-						"mpc_cmp(%s, %s)\n",
+						"%s_cmp(%s, %s)\n",
+						prefixe,
 						q->arg1->id,
 						q->arg2->id
 					);
@@ -178,12 +194,12 @@ void quadPrint(quad* q, FILE* out_file, char* rounding) {
 	}
 }
 
-void listQuadPrint(quad *q, FILE* out_file, char* rounding) {
+void listQuadPrint(quad *q, FILE* out_file, char* rounding, char* library) {
 	if(q != NULL) {
 		quad* quad_temp = (quad* )malloc(sizeof(quad));
 		quad_temp = q;
 		while(quad_temp != NULL) {
-			quadPrint(quad_temp, out_file, rounding);
+			quadPrint(quad_temp, out_file, rounding, library);
 			quad_temp = quad_temp->next;
 		}
 	}

@@ -2,7 +2,7 @@
 	#include <stdlib.h>
 	#include <string.h>
 	#include "y.tab.h"
-	
+
 	// debug
 	int displayTokens = 0;
 %}
@@ -27,7 +27,7 @@ OPERATORS 	[(){}+*-/=,;><!]
 				}
 {LIBRARY}		{
 					if(displayTokens) printf("T:bibli\n");
-					yylval.text=yytext;
+					yylval.text=strdup(yytext);
 					return bibli;
 				}
 {PRECISION}		{
@@ -40,17 +40,17 @@ OPERATORS 	[(){}+*-/=,;><!]
 				}
 {FUNCTION}		{
 					if(displayTokens) printf("T:fonction\n");
-					yylval.text=yytext;
+					yylval.text=strdup(yytext);
 					return fonction;
 				}
 {CST}			{
 					if(displayTokens) printf("T:cst\n");
-					yylval.text=yytext;
+					yylval.text=strdup(yytext);
 					return cst;
 				}
 {IDENTIFIER} 	{
 					if(displayTokens) printf("T:ID\n");
-					yylval.text=yytext;
+					yylval.text=strdup(yytext);
 					return ID;
 				}
 {INTEGER}    	{

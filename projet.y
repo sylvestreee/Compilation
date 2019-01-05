@@ -1,5 +1,6 @@
 %{
 	#include <stdio.h>
+	#include <string.h>
 	#include "utils.h"
 	#include "quad.h"
 	#include "symbol.h"
@@ -58,11 +59,13 @@ START : L_PRAGMA OTHER | L_PRAGMA | OTHER;
 L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' LIGNES '}' retour
 	{
+		library = $2;
+
 		symbolTablePrint(&symbolTable);
 		initVariables(&symbolTable, out_file, library, num_precision, rounding);
 		$$.code = $6.code;
-		listQuadPrint($$.code, out_file, rounding);
-		desallocVariables(&symbolTable, out_file);
+		listQuadPrint($$.code, out_file, rounding, library);
+		desallocVariables(&symbolTable, out_file, library);
 	}
 
 OTHER:
@@ -74,24 +77,22 @@ OTHER:
 	| retour
 	| ';' OTHER | '{' OTHER	| '}' OTHER	| '+' OTHER | '*' OTHER
 	| '=' OTHER | '(' OTHER	| ')' OTHER	| '/' OTHER | '-' OTHER
-	| '=' OTHER | ',' OTHER	| '>' OTHER	| '<' OTHER | '!' OTHER
+	| ',' OTHER	| '>' OTHER	| '<' OTHER | '!' OTHER
 	;
 
 TEXTE : autre | retour | bibli | cst | ID | fonction ;
 
 ENTIER_LEX : precision | arrondi | ENTIER ;
 
-// PONCT : '(';
-
 ARGUMENT :
 	precision '(' ENTIER ')'
 	{
-		//
+		num_precision = $3;
 	}
 
 	| arrondi '(' cst ')'
 	{
-		//
+		rounding = $3;
 	}
 	;
 

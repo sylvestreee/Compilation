@@ -73,29 +73,38 @@ void symbolPrint(symbol* sym) {
 
 /**
  * Print all variables initialisations in a file
- * @TODO : choose library & precision
  * Args:
  * Table of symbols containing the temporary variables
  * File to complete
  */
 void initVariables(symbol** TS, FILE* out_file, char* library, int precision, char* rounding) {
+	char* prefixe = "mpc";
+	if(strcmp(library, "MPFR") == 0) {
+		prefixe = "mpfr";
+	}
+
 	if((*TS != NULL) && (out_file != NULL)) {
 		symbol* current = *TS;
 
 		while(current->next != NULL) {
 			// create variable
+
 			fprintf(
 				out_file,
-				"mpc_t %s; mpc_init2(%s, %d);\n",
+				"%s_t %s; %s_init2(%s, %d);\n",
+				prefixe,
 				current->id,
+				prefixe,
 				current->id,
 				precision
 			);
+
 			// if it has a value, set it
 			if(current->isConstant) {
 				fprintf(
 					out_file,
-					"mpc_set_si(%s, %d, %s);\n",
+					"%s_set_si(%s, %d, %s);\n",
+					prefixe,
 					current->id,
 					current->value,
 					rounding
@@ -113,20 +122,24 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
  * Table of symbols containing the temporary variables
  * File to complete
  */
-void desallocVariables(symbol** TS, FILE* out_file) {
+void desallocVariables(symbol** TS, FILE* out_file, char* library) {
+	char* prefixe = "mpc";
+	if(strcmp(library, "MPFR") == 0) {
+		prefixe = "mpfr";
+	}
+
 	if((*TS != NULL) && (out_file != NULL)) {
 		symbol* current = *TS;
 
 		while(current->next != NULL) {
 			fprintf(
 				out_file,
-				"mpc_clear(%s);\n",
+				"%s_clear(%s);\n",
+				prefixe,
 				current->id
 			);
 
 			current = current->next;
 		}
 	}
-
-
 }
