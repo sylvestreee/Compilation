@@ -4,7 +4,7 @@
 	#include "y.tab.h"
 
 	// debug
-	int displayTokens = 0;
+	int displayTokens = 1;
 %}
 
 PRAGMA		^#pragma
@@ -65,6 +65,7 @@ OPERATORS 	[(){}+*-/=,;><!]
 				}
 {OPERATORS}   	{
 					if(displayTokens) printf("T:%c\n", yytext[0]);
+					yylval.text=strdup(yytext);
 					return yytext[0];
 				}
 

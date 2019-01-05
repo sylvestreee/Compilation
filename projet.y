@@ -24,6 +24,8 @@
 		struct quadS* code;
 	} codegen;
 
+	char * string;
+
 	char* text;
 	float flottant;
 	int entier_lex;
@@ -45,6 +47,7 @@
 %type <codegen> E LIGNES L_PRAGMA
 %type <text> TEXTE PONCT
 %type <entier_lex> ENTIER_LEX
+%type <string> OTHER
 
 %start START
 %left '+' '-'
@@ -55,7 +58,11 @@
 
 %%
 
-START : OTHER L_PRAGMA OTHER;
+START : OTHER L_PRAGMA OTHER
+	{
+		printf("%s\n",$1);
+	}
+	;
 
 L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' LIGNES '}' retour
@@ -70,11 +77,35 @@ L_PRAGMA :
 	}
 
 OTHER:
-	TEXTE OTHER
+	PONCT OTHER
+	{
+		printf("ponct %s\n",$1 );
+		printf("ponct 2%s\n", $2);
+		$$ = strcat($1,$2);
+	}
+	| TEXTE OTHER
+	{
+		printf("texte  1 %s\n", $1);
+		printf("texte 2 %s\n", $1);
+		$$ = strcat($1,$2);
+	}
 	| TEXTE
+	{
+		printf("texte %s\n", $1);
+		$$ = $1;
+	}
 	| ENTIER_LEX OTHER
+	{
+		char str[250];
+		sprintf(str,"%d",$1);
+		$$ = strcat(str,$2);
+	}
 	| n_flottant OTHER
-	| PONCT OTHER
+	{
+		char str[250];
+		sprintf(str,"%f",$1);
+		$$ = strcat(str,$2);
+	}
 	;
 
 PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
