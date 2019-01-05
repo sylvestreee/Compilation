@@ -40,9 +40,10 @@
 %token <entier_lex> ENTIER
 %token <flottant> n_flottant
 %token <text> fonction
+%token <text> '+' ';' '{' '}' '*' '=' '(' ')' '/' '-' ',' '>' '<' '!'
 
 %type <codegen> E LIGNES L_PRAGMA
-%type <text> TEXTE
+%type <text> TEXTE PONCT
 %type <entier_lex> ENTIER_LEX
 
 %start START
@@ -54,7 +55,7 @@
 
 %%
 
-START : L_PRAGMA OTHER | L_PRAGMA | OTHER;
+START : OTHER L_PRAGMA OTHER;
 
 L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' LIGNES '}' retour
@@ -70,15 +71,15 @@ L_PRAGMA :
 
 OTHER:
 	TEXTE OTHER
+	| TEXTE
 	| ENTIER_LEX OTHER
 	| n_flottant OTHER
-	| L_PRAGMA
-	| L_PRAGMA OTHER
-	| retour
-	| ';' OTHER | '{' OTHER	| '}' OTHER	| '+' OTHER | '*' OTHER
-	| '=' OTHER | '(' OTHER	| ')' OTHER	| '/' OTHER | '-' OTHER
-	| ',' OTHER	| '>' OTHER	| '<' OTHER | '!' OTHER
+	| PONCT OTHER
 	;
+
+PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
+		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
+		| '<'	| '!' ;
 
 TEXTE : autre | retour | bibli | cst | ID | fonction ;
 
@@ -107,13 +108,20 @@ LIGNES :
 	{
 		$$.code = $2.code;
 	}
+
 	| E ';' retour LIGNES
 	{
 		$$.code = $1.code;
 		quadAdd(&$$.code, $4.code);
 	}
 
-	| E ';' retour | E ';'
+	| E ';' retour
+	{
+		$$.code = $1.code;
+		$$.result = $1.result;
+	}
+
+	| E ';'
 	{
 		$$.code = $1.code;
 		$$.result = $1.result;

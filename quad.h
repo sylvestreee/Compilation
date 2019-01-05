@@ -9,7 +9,7 @@ typedef struct quadS {
 	symbol* arg1;
 	symbol* arg2;
 	symbol* res;
-	struct quadS *next;
+	struct quadS* next;
 } quad;
 
 quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res);
