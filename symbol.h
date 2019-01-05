@@ -2,6 +2,7 @@
 #define __SYMBOL_H__
 
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef struct symbolS {
 	char *id;
@@ -17,5 +18,6 @@ symbol* symbolLookup(symbol* TS, char* name);
 symbol* symbolAdd(symbol** TS, char* name);
 void symbolTablePrint(symbol **TS);
 void symbolPrint(symbol* sym);
+void initVariables(symbol** TS, FILE* out_file, char* library, int precision);
 
 #endif

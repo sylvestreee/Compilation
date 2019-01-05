@@ -12,6 +12,9 @@
 	FILE* out_file;
 	symbol* symbolTable = NULL;
 
+	char* library = "MPC";
+	int num_precision = 128;
+	char* rounding = "MPC_RNDZZ";
 %}
 
 %union {
@@ -58,6 +61,7 @@ L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
 	{
 		symbolTablePrint(&symbolTable);
+		initVariables(&symbolTable, out_file, library, num_precision);
 	}
 
 OTHER:

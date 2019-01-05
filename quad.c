@@ -42,6 +42,7 @@ void quadAdd(quad** quadList, quad* newQuad, FILE * out_file) {
 
 		// DEBUG
 		printf("New quad:\n");
+		quadPrint(newQuad, NULL);
 		quadPrint(newQuad, out_file);
 	}
 }

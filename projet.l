@@ -2,10 +2,7 @@
 	#include <stdlib.h>
 	#include <string.h>
 	#include "y.tab.h"
-
-	char* library = NULL;
-	int num_precision = 0;
-	char* rounding = NULL;
+	
 	// debug
 	int displayTokens = 0;
 %}

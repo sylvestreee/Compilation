@@ -70,3 +70,29 @@ void symbolPrint(symbol* sym) {
 		sym->id, sym->value, sym->isConstant == true ? "(CST)" : ""
 	);
 }
+
+/**
+ * Print all variables initialisations in a file
+ * @TODO : choose library & precision
+ * Args:
+ * Table of symbols containing the temporary variables
+ * File to completes
+ */
+void initVariables(symbol** TS, FILE* out_file, char* library, int precision) {
+	if((*TS != NULL) && (out_file != NULL)) {
+		symbol* current = *TS;
+
+		while(current->next != NULL) {
+			symbolPrint(current);
+			fprintf(
+				out_file,
+				"mpc_t %s; mpc_init2(%s, %d);\n",
+				current->id,
+				current->id,
+				precision
+			);
+
+			current = current->next;
+		}
+	}
+}
