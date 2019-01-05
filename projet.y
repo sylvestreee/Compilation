@@ -188,15 +188,15 @@ E :
 	E '+' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("+", $1.result, $3.result, $$.result));
 
 		if(firstQuad == 0) {
-			tableQuad = quadInit('+', $1.result, $3.result, $$.result);
+			tableQuad = quadInit("+", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad =1;
 		}
 		else {
-			tableQuad->next = quadInit('+', $1.result, $3.result, $$.result);
+			tableQuad->next = quadInit("+", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
 
@@ -205,15 +205,15 @@ E :
 	| E '-' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("-", $1.result, $3.result, $$.result));
 
 		if(firstQuad == 0) {
-			tableQuad = quadInit('-', $1.result, $3.result, $$.result);
+			tableQuad = quadInit("-", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
 		}
 		else {
-			tableQuad->next = quadInit('-', $1.result, $3.result, $$.result);
+			tableQuad->next = quadInit("-", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
 	}
@@ -221,15 +221,15 @@ E :
 	| E '*' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("*", $1.result, $3.result, $$.result));
 
 		if(firstQuad == 0) {
-			tableQuad = quadInit('*', $1.result, $3.result, $$.result);
+			tableQuad = quadInit("*", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
 		}
 		else {
-			tableQuad->next = quadInit('*', $1.result, $3.result, $$.result);
+			tableQuad->next = quadInit("*", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
 	}
@@ -237,15 +237,15 @@ E :
 	| E '/' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("/", $1.result, $3.result, $$.result));
 
 		if(firstQuad == 0) {
-			tableQuad = quadInit('/', $1.result, $3.result, $$.result);
+			tableQuad = quadInit("/", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
 		}
 		else {
-			tableQuad->next = quadInit('/', $1.result, $3.result, $$.result);
+			tableQuad->next = quadInit("/", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
 	}
@@ -253,25 +253,25 @@ E :
 	| E '>' E
 	{
 		$$.result = NULL;
-		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit(">", $1.result, $3.result, $$.result));
 	}
 
 	| E '<' E
 	{
 		$$.result = NULL;
-		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, quadInit("<", $1.result, $3.result, $$.result));
 	}
 
 	| E '>''=' E
 	{
 		$$.result = NULL;
-		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
+		quadAdd(&$$.code, quadInit("s", $1.result, $4.result, $$.result));
 	}
 
 	| E '<''=' E
 	{
 		$$.result = NULL;
-		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
+		quadAdd(&$$.code, quadInit("i", $1.result, $4.result, $$.result));
 	}
 
 	| '(' E ')'
@@ -279,6 +279,24 @@ E :
 		$$.result = $2.result;
 		$$.code = $2.code;
 	}
+
+	| fonction '(' E ')'
+	{
+		/* A MODIFIER */
+		$$.result = symbolNewTemp(&symbolTable);
+		quadAdd(&$$.code, quadInit($1, $3.result, NULL, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit($1, $3.result, NULL, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit($1, $3.result, NULL, $$.result);
+			tableQuad = tableQuad->next;
+		}
+	}
+
 	| ID
 	{
 		// add ID only if it's not in symbol table

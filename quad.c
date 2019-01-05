@@ -9,7 +9,7 @@
 		* res : result of the op between arg1 and arg2 (
 		* 		  if arg2 is NULL, res is the result of the op on arg1
   */
-quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res) {
+quad* quadInit(char* op, symbol* arg1, symbol* arg2, symbol* res) {
 
 	// memory allocation
 	quad* new 	= (quad* )malloc(sizeof(quad));
@@ -97,274 +97,268 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 	if(q->arg2 != NULL) {
 
 		// print depends of the op
-		switch(q->op) {
 
-			// addition
-			case '+' :
-				if(out_file == NULL) {
-					if(strcmp(prefixe, "mpc") == 0) {
+		// addition
+		if(strcmp(q->op, "+") == 0) {
+			if(out_file == NULL) {
+				if(strcmp(prefixe, "mpc") == 0) {
 
-						// file is NULL (=) print in terminal
-						printf("%s_add(%s, %s, %s, %s)\n",
-							prefixe,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
+					// file is NULL (=) print in terminal
+					printf("%s_add(%s, %s, %s, %s);\n",
+						prefixe,
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id,
+						rounding
+					);
+				} else if(strcmp(prefixe, "mpfr") == 0) {
 
-						// file is NULL (=) print in terminal
-						printf("%s_add(%s, %s, %s, %s)\n",
-							prefixe,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
-				} else {
-					if(strcmp(prefixe, "mpc") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_add(%s, %s, %s, %s)\n",
-							prefixe,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_add(%s, %s, %s, %s)\n",
-							prefixe,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
+					// file is NULL (=) print in terminal
+					printf("%s_add(%s, %s, %s, %s);\n",
+						prefixe,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
 				}
-				break;
+			} else {
+				if(strcmp(prefixe, "mpc") == 0) {
 
-			// substraction
-			case '-' :
-				if(out_file == NULL) {
-					if(strcmp(prefixe, "mpc") == 0) {
+					// file is not NULL (=) print in file
+					fprintf(out_file,
+						"%s_add(%s, %s, %s, %s);\n",
+						prefixe,
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id,
+						rounding
+					);
+				} else if(strcmp(prefixe, "mpfr") == 0) {
 
-						// file is NULL (=) print in terminal
-						printf("%s_sub(%s, %s, %s, %s)\n",
-							prefixe,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is NULL (=) print in terminal
-						printf("%s_sub(%s, %s, %s, %s)\n",
-							prefixe,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
-				} else {
-					if(strcmp(prefixe, "mpc") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_sub(%s, %s, %s, %s)\n",
-							prefixe,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_sub(%s, %s, %s, %s)\n",
-							prefixe,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
+					// file is not NULL (=) print in file
+					fprintf(out_file,
+						"%s_add(%s, %s, %s, %s);\n",
+						prefixe,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
 				}
-				break;
+			}
+		// substraction
+		} else if(strcmp(q->op, "-") == 0) {
+			if(out_file == NULL) {
+				if(strcmp(prefixe, "mpc") == 0) {
 
+					// file is NULL (=) print in terminal
+					printf("%s_sub(%s, %s, %s, %s);\n",
+						prefixe,
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id,
+						rounding
+					);
+				} else if(strcmp(prefixe, "mpfr") == 0) {
+
+					// file is NULL (=) print in terminal
+					printf("%s_sub(%s, %s, %s, %s);\n",
+						prefixe,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
+				}
+			} else {
+				if(strcmp(prefixe, "mpc") == 0) {
+
+					// file is not NULL (=) print in file
+					fprintf(out_file,
+						"%s_sub(%s, %s, %s, %s);\n",
+						prefixe,
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id,
+						rounding
+					);
+				} else if(strcmp(prefixe, "mpfr") == 0) {
+
+					// file is not NULL (=) print in file
+					fprintf(out_file,
+						"%s_sub(%s, %s, %s, %s);\n",
+						prefixe,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
+				}
+			}
 			// multiplication
-			case '*' :
-				if(out_file == NULL) {
-					if(strcmp(prefixe, "mpc") == 0) {
-
-						// file is NULL (=) print in terminal
-						printf("%s_%s(%s, %s, %s, %s)\n",
-							prefixe,
-							multPrefix,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is NULL (=) print in terminal
-						printf("%s_%s(%s, %s, %s, %s)\n",
-							prefixe,
-							multPrefix,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
-				} else {
-					if(strcmp(prefixe, "mpc") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_%s(%s, %s, %s, %s)\n",
-							prefixe,
-							multPrefix,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_%s(%s, %s, %s, %s)\n",
-							prefixe,
-							multPrefix,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
-				}
-				break;
-
-			// division
-			case '/' :
-				if(out_file == NULL) {
-					if(strcmp(prefixe, "mpc") == 0) {
-
-						// file is NULL (=) print in terminal
-						printf("%s_div(%s, %s, %s, %s)\n",
-							prefixe,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is NULL (=) print in terminal
-						printf("%s_div(%s, %s, %s, %s)\n",
-							prefixe,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
-				} else {
-					if(strcmp(prefixe, "mpc") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_div(%s, %s, %s, %s)\n",
-							prefixe,
-							q->arg1->id,
-							q->arg2->id,
-							q->res->id,
-							rounding
-						);
-					} else if(strcmp(prefixe, "mpfr") == 0) {
-
-						// file is not NULL (=) print in file
-						fprintf(out_file,
-							"%s_div(%s, %s, %s, %s)\n",
-							prefixe,
-							q->res->id,
-							q->arg1->id,
-							q->arg2->id,
-							rounding
-						);
-					}
-				}
-				break;
-
-			// inferior / superior / superior or equal / inferior or equal
-			case '<' :
-			case '>' :
-			case 's' :
-			case 'i' :
-				if(out_file == NULL) {
+		} else if(strcmp(q->op, "*") == 0) {
+			if(out_file == NULL) {
+				if(strcmp(prefixe, "mpc") == 0) {
 
 					// file is NULL (=) print in terminal
-					printf("%s_cmp(%s, %s)\n",
+					printf("%s_%s(%s, %s, %s, %s);\n",
 						prefixe,
+						multPrefix,
 						q->arg1->id,
-						q->arg2->id
+						q->arg2->id,
+						q->res->id,
+						rounding
 					);
-				} else {
+				} else if(strcmp(prefixe, "mpfr") == 0) {
+
+					// file is NULL (=) print in terminal
+					printf("%s_%s(%s, %s, %s, %s);\n",
+						prefixe,
+						multPrefix,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
+				}
+			} else {
+				if(strcmp(prefixe, "mpc") == 0) {
 
 					// file is not NULL (=) print in file
 					fprintf(out_file,
-						"%s_cmp(%s, %s)\n",
+						"%s_%s(%s, %s, %s, %s);\n",
 						prefixe,
+						multPrefix,
 						q->arg1->id,
-						q->arg2->id
-					);
-				}
-				break;
-
-			// unknown operator
-			default :
-				if(out_file == NULL) {
-
-					// file is NULL (=) print in terminal
-					printf("%s = %s(%d) %c %s(%d)\n",
+						q->arg2->id,
 						q->res->id,
-						q->arg1->id,q->arg1->value,
-						q->op,
-						q->arg2->id,q->arg2->value
+						rounding
 					);
-				} else {
+				} else if(strcmp(prefixe, "mpfr") == 0) {
 
 					// file is not NULL (=) print in file
 					fprintf(out_file,
-						"%s = %s(%d) %c %s(%d)\n",
+						"%s_%s(%s, %s, %s, %s);\n",
+						prefixe,
+						multPrefix,
 						q->res->id,
-						q->arg1->id,q->arg1->value,
-						q->op,
-						q->arg2->id,q->arg2->value
+						q->arg1->id,
+						q->arg2->id,
+						rounding
 					);
 				}
-				break;
+			}
+		// division
+		} else if(strcmp(q->op, "/") == 0) {
+			if(out_file == NULL) {
+				if(strcmp(prefixe, "mpc") == 0) {
+
+					// file is NULL (=) print in terminal
+					printf("%s_div(%s, %s, %s, %s);\n",
+						prefixe,
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id,
+						rounding
+					);
+				} else if(strcmp(prefixe, "mpfr") == 0) {
+
+					// file is NULL (=) print in terminal
+					printf("%s_div(%s, %s, %s, %s);\n",
+						prefixe,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
+				}
+			} else {
+				if(strcmp(prefixe, "mpc") == 0) {
+
+					// file is not NULL (=) print in file
+					fprintf(out_file,
+						"%s_div(%s, %s, %s, %s);\n",
+						prefixe,
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id,
+						rounding
+					);
+				} else if(strcmp(prefixe, "mpfr") == 0) {
+
+					// file is not NULL (=) print in file
+					fprintf(out_file,
+						"%s_div(%s, %s, %s, %s);\n",
+						prefixe,
+						q->res->id,
+						q->arg1->id,
+						q->arg2->id,
+						rounding
+					);
+				}
+			}
+		// inferior / superior / superior or equal / inferior or equal
+		} else if((strcmp(q->op, "<") == 0) || (strcmp(q->op, ">") == 0)
+		|| (strcmp(q->op, "s") == 0) || (strcmp(q->op, "i") == 0)) {
+			if(out_file == NULL) {
+
+				// file is NULL (=) print in terminal
+				printf("%s_cmp(%s, %s);\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id
+				);
+			} else {
+
+				// file is not NULL (=) print in file
+				fprintf(out_file,
+					"%s_cmp(%s, %s);\n",
+					prefixe,
+					q->arg1->id,
+					q->arg2->id
+				);
+			}
+		// unknown operator
+		} else {
+			if(out_file == NULL) {
+
+				// file is NULL (=) print in terminal
+				printf("%s = %s(%d) %s %s(%d)\n",
+					q->res->id,
+					q->arg1->id,q->arg1->value,
+					q->op,
+					q->arg2->id,q->arg2->value
+				);
+			} else {
+
+				// file is not NULL (=) print in file
+				fprintf(out_file,
+					"%s = %s(%d) %s %s(%d)\n",
+					q->res->id,
+					q->arg1->id,q->arg1->value,
+					q->op,
+					q->arg2->id,q->arg2->value
+				);
+			}
 		}
 
+	// FUNCTIONS
 	} else {
-
-		// if the op concerns only one argument (=) print in terminal
-		printf("%s = %c %s(%d)\n",
-			q->res->id,
-			q->op,
-			q->arg1->id,q->arg1->value
-		);
+		if(out_file == NULL) {
+			printf("%s_%s(%s);\n",
+				prefixe,
+				q->op,
+				q->arg1->id
+			);
+		} else {
+			fprintf(out_file,
+				"%s_%s(%s);\n",
+				prefixe,
+				q->op,
+				q->arg1->id
+			);
+		}
 	}
 }
 

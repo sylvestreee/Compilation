@@ -4,14 +4,14 @@
 	#include "y.tab.h"
 
 	// debug
-	int displayTokens = 1;
+	int displayTokens = 0;
 %}
 
 PRAGMA		^[ \t]?#pragma
 LIBRARY		MPFR|MPC
 PRECISION	precision
 ROUNDING	rounding
-FUNCTION	sqrt|pow
+FUNCTION	sqrt|pow|abs|div|exp|log|sin|cos|tan|asin|acos|atan
 CST			[A-Z_]*
 SPACE		[ \t]+
 NEWLINE		[\n]+
