@@ -23,7 +23,6 @@
 		struct quadS* code;
 	} codegen;
 
-	int character;
 	char* text;
 	float flottant;
 	int entier_lex;
@@ -43,7 +42,6 @@
 
 %type <codegen> E LIGNES L_PRAGMA
 %type <text> TEXTE
-// %type <character> PONCT
 %type <entier_lex> ENTIER_LEX
 
 %start START
@@ -71,10 +69,12 @@ OTHER:
 	TEXTE OTHER
 	| ENTIER_LEX OTHER
 	| n_flottant OTHER
-	/*| PONCT OTHER*/
 	| L_PRAGMA
 	| L_PRAGMA OTHER
 	| retour
+	| ';' OTHER | '{' OTHER	| '}' OTHER	| '+' OTHER | '*' OTHER
+	| '=' OTHER | '(' OTHER	| ')' OTHER	| '/' OTHER | '-' OTHER
+	| '=' OTHER | ',' OTHER	| '>' OTHER	| '<' OTHER | '!' OTHER
 	;
 
 TEXTE : autre | retour | bibli | cst | ID | fonction ;
@@ -112,12 +112,7 @@ LIGNES :
 		quadAdd(&$$.code, $4.code);
 	}
 
-	| E ';' retour
-	{
-		$$.code = $1.code;
-	}
-
-	| E ';'
+	| E ';' retour | E ';'
 	{
 		$$.code = $1.code;
 		$$.result = $1.result;
