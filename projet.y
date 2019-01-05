@@ -47,7 +47,7 @@
 %type <codegen> E LIGNES L_PRAGMA
 %type <text> TEXTE PONCT
 %type <entier_lex> ENTIER_LEX
-%type <string> OTHER
+%type <string> OTHER L
 
 %start START
 %left '+' '-'
@@ -88,30 +88,45 @@ L_PRAGMA :
 		$$.code = $6.code;
 	}
 
-OTHER:
-	PONCT retour
+OTHER: L retour OTHER
 	{
+		$$ = strcat(strcat($1, "\n"), $3);
+	}
+	| L retour;
+
+L:
+	PONCT
+	{
+		printf("ponct3 %s\n",$1);
 		$$ = $1;
 	}
-	| PONCT OTHER
+	| PONCT L
+	{
+		if((strncmp($1,"/",1) == 0) && (strncmp($2, "/",1) == 0)) {
+			$$ = strcat($1, $2);
+		} else if((strncmp($1,"/",1) == 0) && (strncmp($2, "*",1) == 0)) {
+			$$ = strcat($1, $2);
+		} else if((strncmp($1,"*",1) == 0) && (strncmp($2, "/",1) == 0)) {
+			$$ = strcat($1, $2);
+		} else {
+			$$ = strcat(strcat($1," "),$2);
+		}
+	}
+	| TEXTE L
 	{
 		$$ = strcat(strcat($1," "),$2);
 	}
-	| TEXTE OTHER
-	{
-		$$ = strcat(strcat($1," "),$2);
-	}
-	| TEXTE retour
+	| TEXTE
 	{
 		$$ = strcat($1," ");
 	}
-	| ENTIER_LEX OTHER
+	| ENTIER_LEX L
 	{
 		char str[250];
 		sprintf(str,"%d",$1);
 		$$ = strcat(strcat(str," "),$2);
 	}
-	| n_flottant OTHER
+	| n_flottant L
 	{
 		char str[250];
 		sprintf(str,"%f",$1);
@@ -123,7 +138,7 @@ PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
 		| '<'	| '!' ;
 
-TEXTE : autre | bibli | cst | ID | fonction ;
+TEXTE : autre| bibli | cst | ID | fonction ;
 
 ENTIER_LEX : precision | arrondi | ENTIER ;
 

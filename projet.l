@@ -4,10 +4,10 @@
 	#include "y.tab.h"
 
 	// debug
-	int displayTokens = 0;
+	int displayTokens = 1;
 %}
 
-PRAGMA		^#pragma
+PRAGMA		^[ \t]?#pragma
 LIBRARY		MPFR|MPC
 PRECISION	precision
 ROUNDING	rounding
@@ -69,7 +69,7 @@ OPERATORS 	[(){}+*-/=,;><!]
 					return yytext[0];
 				}
 
-{SPACE}			{ }
+{SPACE}			{ if(displayTokens) printf("T:space\n"); }
 {NEWLINE}		{
 					if(displayTokens) printf("T:retour\n");
 					return retour;
