@@ -23,7 +23,7 @@ void quadFree(quad* q) {
  * Adress of a list of quads
  * Quad to add
  */
-void quadAdd(quad** quadList, quad* newQuad) {
+void quadAdd(quad** quadList, quad* newQuad, FILE * out_file) {
 	if((newQuad != NULL) && (quadList != NULL)) {
 		// the list is empty
 		if(quadList[0] == NULL) {
@@ -42,62 +42,122 @@ void quadAdd(quad** quadList, quad* newQuad) {
 
 		// DEBUG
 		printf("New quad:\n");
-		quadPrint(newQuad);
+		quadPrint(newQuad, out_file);
 	}
 }
 
-void quadPrint(quad* q) {
+/**
+ * Print a quad : if out_file is NULL, print in terminal, else, in file
+ * Args:
+ * q the quad to print
+ * out_file the optional file to use
+ */
+void quadPrint(quad* q, FILE* out_file) {
 	if(q->arg2 != NULL) { // if 2 args
 		switch(q->op) {
 			case '+' :
-				printf("mpc_add(%s, %s, %s, arrondi)\n",
-					q->arg1->id,
-					q->arg2->id,
-					q->res->id
-				);
+				if(out_file == NULL) {
+					printf("mpc_add(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				} else {
+					fprintf(out_file,
+						"mpc_add(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				}
 				break;
 
 			case '-' :
-				printf("mpc_sub(%s, %s, %s, arrondi)\n",
-					q->arg1->id,
-					q->arg2->id,
-					q->res->id
-				);
+				if(out_file == NULL) {
+					printf("mpc_sub(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				} else {
+					fprintf(out_file,
+						"mpc_sub(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				}
 				break;
 
 			case '*' :
-				printf("mpc_mult(%s, %s, %s, arrondi)\n",
-					q->arg1->id,
-					q->arg2->id,
-					q->res->id
-				);
+				if(out_file == NULL) {
+					printf("mpc_mult(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				} else {
+					fprintf(out_file,
+						"mpc_mult(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				}
 				break;
 
 			case '/' :
-				printf("mpc_div(%s, %s, %s, arrondi)\n",
-					q->arg1->id,
-					q->arg2->id,
-					q->res->id
-				);
+				if(out_file == NULL) {
+					printf("mpc_div(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				} else {
+					fprintf(out_file,
+						"mpc_div(%s, %s, %s, arrondi)\n",
+						q->arg1->id,
+						q->arg2->id,
+						q->res->id
+					);
+				}
 				break;
 
 			case '<' :
 			case '>' :
 			case 's' :
 			case 'i' :
-				printf("mpc_cmp(%s, %s)\n",
-					q->arg1->id,
-					q->arg2->id
-				);
+				if(out_file == NULL) {
+					printf("mpc_cmp(%s, %s)\n",
+						q->arg1->id,
+						q->arg2->id
+					);
+				} else {
+					fprintf(out_file,
+						"mpc_cmp(%s, %s)\n",
+						q->arg1->id,
+						q->arg2->id
+					);
+				}
 				break;
 
 			default :
-				printf("%s = %s(%d) %c %s(%d)\n",
-					q->res->id,
-					q->arg1->id,q->arg1->value,
-					q->op,
-					q->arg2->id,q->arg2->value
-				);
+				if(out_file == NULL) {
+					printf("%s = %s(%d) %c %s(%d)\n",
+						q->res->id,
+						q->arg1->id,q->arg1->value,
+						q->op,
+						q->arg2->id,q->arg2->value
+					);
+				} else {
+					fprintf(out_file,
+						"%s = %s(%d) %c %s(%d)\n",
+						q->res->id,
+						q->arg1->id,q->arg1->value,
+						q->op,
+						q->arg2->id,q->arg2->value
+					);
+				}
 				break;
 		}
 
@@ -110,12 +170,12 @@ void quadPrint(quad* q) {
 	}
 }
 
-void listQuadPrint(quad *q) {
+void listQuadPrint(quad *q, FILE* out_file) {
 	if(q != NULL) {
 		quad* quad_temp = (quad* )malloc(sizeof(quad));
 		quad_temp = q;
 		while(quad_temp != NULL) {
-			quadPrint(quad_temp);
+			quadPrint(quad_temp, out_file);
 			quad_temp = quad_temp->next;
 		}
 	}

@@ -2,6 +2,7 @@
 #define __QUAD_H__
 
 #include "symbol.h"
+#include <stdio.h>
 
 typedef struct quadS {
 	char op;
@@ -13,8 +14,8 @@ typedef struct quadS {
 
 quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res);
 void quadFree(quad* q);
-void quadAdd(quad** dest, quad* src);
-void quadPrint(quad* q);
-void listQuadPrint(quad* q);
+void quadAdd(quad** dest, quad* src, FILE* out_file);
+void quadPrint(quad* q, FILE* out_file);
+void listQuadPrint(quad* q, FILE* out_file);
 
 #endif

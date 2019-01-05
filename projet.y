@@ -110,64 +110,64 @@ E :
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, $3.code, out_file);
+		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result), out_file);
 	}
 
 	| E '-' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, $3.code, out_file);
+		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result), out_file);
 	}
 
 	| E '*' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, $3.code, out_file);
+		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result), out_file);
 	}
 
 	| E '/' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, $3.code, out_file);
+		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result), out_file);
 	}
 
 	| E '>' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, $3.code, out_file);
+		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result), out_file);
 	}
 
 	| E '<' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
-		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
+		quadAdd(&$$.code, $3.code, out_file);
+		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result), out_file);
 	}
 
 	| E '>''=' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code);
-		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
+		quadAdd(&$$.code, $4.code, out_file);
+		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result), out_file);
 	}
 
 	| E '<''=' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code);
-		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
+		quadAdd(&$$.code, $4.code, out_file);
+		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result), out_file);
 	}
 
 	| '(' E ')'
@@ -215,6 +215,6 @@ int main(int argc, char* argv[]) {
 	} else {
 		yyparse();
 	}
-	
+
 	return 0;
 }
