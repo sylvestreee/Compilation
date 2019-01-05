@@ -4,7 +4,7 @@
 	#include "y.tab.h"
 
 	// debug
-	int displayTokens = 1;
+	int displayTokens = 0;
 %}
 
 PRAGMA		^#pragma

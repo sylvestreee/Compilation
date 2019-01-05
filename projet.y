@@ -32,7 +32,7 @@
 };
 
 %token pragma
-%token <text> retour
+%token <string> retour
 %token <text> bibli
 %token <text> autre
 %token <entier_lex> precision
@@ -60,7 +60,16 @@
 
 START : OTHER L_PRAGMA OTHER
 	{
-		printf("%s\n",$1);
+		if(out_file == NULL) {
+			printf("%s\n", $1);
+			printf("%s\n", $3);
+		} else {
+			fprintf(out_file, "%s\n\n", $1);
+			initVariables(&symbolTable, out_file, library, num_precision, rounding);
+			listQuadPrint($2.code, out_file, rounding, library);
+			desallocVariables(&symbolTable, out_file, library);
+			fprintf(out_file, "\n%s\n", $3);
+		}
 	}
 	;
 
@@ -70,41 +79,44 @@ L_PRAGMA :
 		library = $2;
 
 		symbolTablePrint(&symbolTable);
-		initVariables(&symbolTable, out_file, library, num_precision, rounding);
 		$$.code = $6.code;
-		listQuadPrint($$.code, out_file, rounding, library);
-		desallocVariables(&symbolTable, out_file, library);
 	}
 
 OTHER:
-	PONCT OTHER
+	PONCT retour
 	{
-		printf("ponct %s\n",$1 );
-		printf("ponct 2%s\n", $2);
-		$$ = strcat($1,$2);
+		//printf("ponct3 %s\n",$1);
+		$$ = $1;
+	}
+	| PONCT OTHER
+	{
+		// printf("ponct %s\n",$1 );
+		// printf("ponct 2%s\n", $2);
+
+		$$ = strcat(strcat($1," "),$2);
 	}
 	| TEXTE OTHER
 	{
-		printf("texte  1 %s\n", $1);
-		printf("texte 2 %s\n", $1);
-		$$ = strcat($1,$2);
+		// printf("texte  1 %s\n", $1);
+		// printf("texte 2 %s\n", $2);
+		$$ = strcat(strcat($1," "),$2);
 	}
-	| TEXTE
+	| TEXTE retour
 	{
-		printf("texte %s\n", $1);
-		$$ = $1;
+		//printf("texte %s\n", $1);
+		$$ = strcat($1," ");
 	}
 	| ENTIER_LEX OTHER
 	{
 		char str[250];
 		sprintf(str,"%d",$1);
-		$$ = strcat(str,$2);
+		$$ = strcat(strcat(str," "),$2);
 	}
 	| n_flottant OTHER
 	{
 		char str[250];
 		sprintf(str,"%f",$1);
-		$$ = strcat(str,$2);
+		$$ = strcat(strcat(str," "),$2);
 	}
 	;
 
@@ -112,7 +124,7 @@ PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
 		| '<'	| '!' ;
 
-TEXTE : autre | retour | bibli | cst | ID | fonction ;
+TEXTE : autre | bibli | cst | ID | fonction ;
 
 ENTIER_LEX : precision | arrondi | ENTIER ;
 
