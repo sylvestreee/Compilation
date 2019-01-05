@@ -83,7 +83,6 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision) {
 		symbol* current = *TS;
 
 		while(current->next != NULL) {
-			symbolPrint(current);
 			fprintf(
 				out_file,
 				"mpc_t %s; mpc_init2(%s, %d);\n",

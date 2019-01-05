@@ -23,7 +23,7 @@ void quadFree(quad* q) {
  * Adress of a list of quads
  * Quad to add
  */
-void quadAdd(quad** quadList, quad* newQuad, FILE * out_file) {
+void quadAdd(quad** quadList, quad* newQuad) {
 	if((newQuad != NULL) && (quadList != NULL)) {
 		// the list is empty
 		if(quadList[0] == NULL) {
@@ -41,9 +41,8 @@ void quadAdd(quad** quadList, quad* newQuad, FILE * out_file) {
 		}
 
 		// DEBUG
-		printf("New quad:\n");
-		quadPrint(newQuad, NULL);
-		quadPrint(newQuad, out_file);
+		// printf("New quad:\n");
+		// quadPrint(newQuad, NULL);
 	}
 }
 

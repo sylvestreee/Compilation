@@ -61,7 +61,10 @@ L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
 	{
 		symbolTablePrint(&symbolTable);
+
 		initVariables(&symbolTable, out_file, library, num_precision);
+		$$.code = $7.code;
+		listQuadPrint($$.code, out_file);
 	}
 
 OTHER:
@@ -95,12 +98,13 @@ ARGUMENT :
 LIGNES :
 	E retour LIGNES
 	{
-		//
+		$$.code = $1.code;
+		quadAdd(&$$.code, $3.code);
 	}
 
 	| E retour
 	{
-		//
+		$$.code = $1.code;
 	}
 	;
 
@@ -114,64 +118,67 @@ E :
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code, out_file);
-		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result), out_file);
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
+
+		printf("Code +\n");
+		listQuadPrint($$.code, NULL);
 	}
 
 	| E '-' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code, out_file);
-		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result), out_file);
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
 	}
 
 	| E '*' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code, out_file);
-		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result), out_file);
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
 	}
 
 	| E '/' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code, out_file);
-		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result), out_file);
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
 	}
 
 	| E '>' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code, out_file);
-		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result), out_file);
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
 	}
 
 	| E '<' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code, out_file);
-		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result), out_file);
+		quadAdd(&$$.code, $3.code);
+		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
 	}
 
 	| E '>''=' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code, out_file);
-		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result), out_file);
+		quadAdd(&$$.code, $4.code);
+		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
 	}
 
 	| E '<''=' E
 	{
 		$$.result = NULL;
 		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code, out_file);
-		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result), out_file);
+		quadAdd(&$$.code, $4.code);
+		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
 	}
 
 	| '(' E ')'

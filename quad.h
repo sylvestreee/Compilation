@@ -14,7 +14,7 @@ typedef struct quadS {
 
 quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res);
 void quadFree(quad* q);
-void quadAdd(quad** dest, quad* src, FILE* out_file);
+void quadAdd(quad** dest, quad* src);
 void quadPrint(quad* q, FILE* out_file);
 void listQuadPrint(quad* q, FILE* out_file);
 
