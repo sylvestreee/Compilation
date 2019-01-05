@@ -58,12 +58,11 @@
 START : L_PRAGMA OTHER | L_PRAGMA | OTHER;
 
 L_PRAGMA :
-	pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
+	pragma bibli ARGUMENT ARGUMENT '{' LIGNES '}' retour
 	{
 		symbolTablePrint(&symbolTable);
-
 		initVariables(&symbolTable, out_file, library, num_precision, rounding);
-		$$.code = $7.code;
+		$$.code = $6.code;
 		listQuadPrint($$.code, out_file, rounding);
 		desallocVariables(&symbolTable, out_file);
 	}
@@ -97,13 +96,28 @@ ARGUMENT :
 	;
 
 LIGNES :
-	E retour LIGNES
+	retour E ';' retour LIGNES
 	{
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
+		$$.code = $2.code;
+		quadAdd(&$$.code, $5.code);
 	}
 
-	| E retour
+	| retour E ';' retour
+	{
+		$$.code = $2.code;
+	}
+	| E ';' retour LIGNES
+	{
+		$$.code = $1.code;
+		quadAdd(&$$.code, $4.code);
+	}
+
+	| E ';' retour
+	{
+		$$.code = $1.code;
+	}
+
+	| E ';'
 	{
 		$$.code = $1.code;
 		$$.result = $1.result;
