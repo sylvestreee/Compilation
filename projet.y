@@ -20,14 +20,16 @@
 		struct quadS* code;
 	} codegen;
 
+	int character;
 	char* text;
 	float flottant;
 	int entier_lex;
 };
 
 %token pragma
-%token retour
+%token <text> retour
 %token <text> bibli
+%token <text> autre
 %token <entier_lex> precision
 %token <entier_lex> arrondi
 %token <text> cst
@@ -37,8 +39,11 @@
 %token <text> fonction
 
 %type <codegen> E LIGNES L_PRAGMA
+%type <text> TEXTE
+// %type <character> PONCT
+%type <entier_lex> ENTIER_LEX
 
-%start L_PRAGMA
+%start START
 %left '+' '-'
 %left '*' '/'
 %left '<' '>'
@@ -47,11 +52,29 @@
 
 %%
 
+START : L_PRAGMA OTHER | L_PRAGMA | OTHER;
+
 L_PRAGMA :
 	pragma bibli ARGUMENT ARGUMENT '{' retour LIGNES '}' retour
 	{
 		symbolTablePrint(&symbolTable);
 	}
+
+OTHER:
+	TEXTE OTHER
+	| ENTIER_LEX OTHER
+	| n_flottant OTHER
+	/*| PONCT OTHER*/
+	| L_PRAGMA
+	| L_PRAGMA OTHER
+	| retour
+	;
+
+TEXTE : autre | retour | bibli | cst | ID | fonction ;
+
+ENTIER_LEX : precision | arrondi | ENTIER ;
+
+// PONCT : '(';
 
 ARGUMENT :
 	precision '(' ENTIER ')'
