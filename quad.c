@@ -85,10 +85,12 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 
 	// default value of prefixe
 	char* prefixe = "mpc";
+	char* multPrefix = "mult";
 
 	// test if the library is MPFR instead of MPC
 	if(strcmp(library, "MPFR") == 0) {
 		prefixe = "mpfr";
+		multPrefix = "mul";
 	}
 
 	// test if the op concerns two arguments
@@ -154,8 +156,9 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				if(out_file == NULL) {
 
 					// file is NULL (=) print in terminal
-					printf("%s_mult(%s, %s, %s, %s)\n",
+					printf("%s_%s(%s, %s, %s, %s)\n",
 						prefixe,
+						multPrefix,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
@@ -165,8 +168,9 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 
 					// file is not NULL (=) print in file
 					fprintf(out_file,
-						"%s_mult(%s, %s, %s, %s)\n",
+						"%s_%s(%s, %s, %s, %s)\n",
 						prefixe,
+						multPrefix,
 						q->arg1->id,
 						q->arg2->id,
 						q->res->id,
