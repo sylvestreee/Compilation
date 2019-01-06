@@ -1,9 +1,18 @@
 #include "symbol.h"
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
+/**
+  * quadInit : initialize a quad
+  * Params :
+		* op : operator
+		* arg1 : argument 1
+		* arg2 : argument 2 (optional)
+		* res : result of the op between arg1 and arg2 (
+		* 		  if arg2 is NULL, res is the result of the op on arg1
+  */
 symbol* symbolAlloc() {
 	symbol* new = (symbol* )malloc(sizeof(symbol));
 	return new;

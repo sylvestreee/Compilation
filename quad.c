@@ -99,7 +99,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 		switch(q->op) {
 
 			// addition
-			case '+'
+			case '+' :
 				if(out_file == NULL) {
 
 					// file is NULL (=) print in terminal

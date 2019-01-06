@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+// symbol type
 typedef struct symbolS {
 	char *id;
 	bool isConstant;
@@ -11,6 +12,7 @@ typedef struct symbolS {
 	struct symbolS *next;
 } symbol;
 
+// functions
 symbol* symbolAlloc();
 void symbolFree(symbol* sym);
 symbol* symbolNewTemp(symbol** TS);
