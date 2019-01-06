@@ -265,7 +265,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 /**
   * listQuadPrint : print a list of quads
   * Params :
-		* q : quad used to print all the quads which follow it (=) the list of quads
+		* q : quad used to run through the list of quads
 		* out_file : file where to print (optional),
 		*						 if out_file is NULL, print is made in terminal
 		* rounding : used rounding mode
