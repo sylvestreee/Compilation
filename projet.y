@@ -282,7 +282,6 @@ E :
 
 	| fonction '(' E ')'
 	{
-		/* A MODIFIER */
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit($1, $3.result, NULL, $$.result));
 
