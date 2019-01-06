@@ -87,21 +87,15 @@ Cette option est utile pour le développement.
 
 ### Traitement du pragma
 
-- Reconnaissance du pragma : **fait**
-- Bibliothèque : à faire
-- Précision : à faire
-- Arrondi : à faire
-- Récupération du code hors pragma (exécutable) : à faire
+- Reconnaissance du pragma
+- Bibliothèque
+- Précision
+- Arrondi
+- Récupération du code hors pragma (exécutable)
 
 ### Expressions mathématiques gérées
 
-- Opérateurs binaires : **+ \* / -**
-- Opérateurs unaires : à faire
-- Fonctions mathématiques : à faire
-- Boucles et conditions : à faire
-
-### Optimisations
-
-- Elimination de sous-expressions communes : à faire
-- Minimisation du nombre de variables temporaires : à faire
-- Sortie de boucle des invariants : à faire
+- Opérateurs binaires : **+ \* / - =**
+- Opérateurs unaires : non gérés
+- Fonctions mathématiques : voir `projet.l`
+- Boucles et conditions : non gérées
