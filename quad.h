@@ -4,6 +4,8 @@
 #include "symbol.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // quad type
 typedef struct quadS {

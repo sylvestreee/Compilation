@@ -1,9 +1,5 @@
 #include "quad.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 /**
   * quadInit : initialize a quad
   * Params :
@@ -23,6 +19,7 @@ quad* quadInit(char op, symbol* arg1, symbol* arg2, symbol* res) {
 	new->arg2 	= arg2;
 	new->op 	= op;
 	new->res 	= res;
+	new->next = NULL;
 
 	return new;
 }
@@ -68,8 +65,10 @@ void quadAdd(quad** quadList, quad* newQuad) {
 		}
 
 		// DEBUG
-		// printf("New quad:\n");
-		// quadPrint(newQuad, NULL);
+		// printf("New quad: %d\n", i);
+		// quadPrint(newQuad, NULL, "MPC_RNDZZ", "mpc");
+		// fflush(stdout);
+		// i++;
 	}
 }
 

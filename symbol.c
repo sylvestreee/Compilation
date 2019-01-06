@@ -1,5 +1,6 @@
 #include "symbol.h"
 
+<<<<<<< Updated upstream
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,6 +14,8 @@
 		* res : result of the op between arg1 and arg2 (
 		* 		  if arg2 is NULL, res is the result of the op on arg1
   */
+=======
+>>>>>>> Stashed changes
 symbol* symbolAlloc() {
 	symbol* new = (symbol* )malloc(sizeof(symbol));
 	return new;

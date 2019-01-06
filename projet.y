@@ -1,6 +1,4 @@
 %{
-	#include <stdio.h>
-	#include <string.h>
 	#include "utils.h"
 	#include "quad.h"
 	#include "symbol.h"
@@ -8,6 +6,14 @@
 	int yylex();
 	void yyerror(char*);
 	int compt = 0;
+
+	int firstQuad = 0;
+
+	//list of quads
+	quad* tableQuad = NULL;
+	//first element of the list
+	//save in order to print quads in the right order
+	quad* first = NULL;
 
 	FILE* yyin;
 	FILE* out_file;
@@ -66,10 +72,12 @@ START : OTHER L_PRAGMA OTHER
 		} else {
 			// before the pragma
 			fprintf(out_file, "%s\n\n", $1);
+
 			// pragma content
 			initVariables(&symbolTable, out_file, library, num_precision, rounding);
-			listQuadPrint($2.code, out_file, rounding, library);
+			listQuadPrint(first, out_file, rounding, library);
 			desallocVariables(&symbolTable, out_file, library);
+
 			// after the pragma
 			fprintf(out_file, "\n%s\n", $3);
 		}
@@ -97,7 +105,6 @@ OTHER: L retour OTHER
 L:
 	PONCT
 	{
-		printf("ponct3 %s\n",$1);
 		$$ = $1;
 	}
 	| PONCT L
@@ -156,33 +163,15 @@ ARGUMENT :
 
 LIGNES :
 	retour E ';' retour LIGNES
-	{
-		$$.code = $2.code;
-		quadAdd(&$$.code, $5.code);
-	}
-
+	{}
 	| retour E ';' retour
-	{
-		$$.code = $2.code;
-	}
-
+	{}
 	| E ';' retour LIGNES
-	{
-		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code);
-	}
-
+	{}
 	| E ';' retour
-	{
-		$$.code = $1.code;
-		$$.result = $1.result;
-	}
-
+	{}
 	| E ';'
-	{
-		$$.code = $1.code;
-		$$.result = $1.result;
-	}
+	{}
 	;
 
 E :
@@ -194,64 +183,89 @@ E :
 	E '+' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('+', $1.result, $3.result, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit('+', $1.result, $3.result, $$.result);
+			first = tableQuad;
+			firstQuad =1;
+		}
+		else {
+			tableQuad->next = quadInit('+', $1.result, $3.result, $$.result);
+			tableQuad = tableQuad->next;
+		}
+
 	}
 
 	| E '-' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('-', $1.result, $3.result, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit('-', $1.result, $3.result, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit('-', $1.result, $3.result, $$.result);
+			tableQuad = tableQuad->next;
+		}
 	}
 
 	| E '*' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('*', $1.result, $3.result, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit('*', $1.result, $3.result, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit('*', $1.result, $3.result, $$.result);
+			tableQuad = tableQuad->next;
+		}
 	}
 
 	| E '/' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('/', $1.result, $3.result, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit('/', $1.result, $3.result, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit('/', $1.result, $3.result, $$.result);
+			tableQuad = tableQuad->next;
+		}
 	}
 
 	| E '>' E
 	{
 		$$.result = NULL;
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('>', $1.result, $3.result, $$.result));
 	}
 
 	| E '<' E
 	{
 		$$.result = NULL;
-		$$.code = $1.code;
-		quadAdd(&$$.code, $3.code);
 		quadAdd(&$$.code, quadInit('<', $1.result, $3.result, $$.result));
 	}
 
 	| E '>''=' E
 	{
 		$$.result = NULL;
-		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code);
 		quadAdd(&$$.code, quadInit('s', $1.result, $4.result, $$.result));
 	}
 
 	| E '<''=' E
 	{
 		$$.result = NULL;
-		$$.code = $1.code;
-		quadAdd(&$$.code, $4.code);
 		quadAdd(&$$.code, quadInit('i', $1.result, $4.result, $$.result));
 	}
 
