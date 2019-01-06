@@ -10,7 +10,7 @@ With a given code, it replaces the calculations with a new version using the lib
 
 The code is modified only if it is placed inside a `pragma` instruction. For example:
 
-```
+```c
 #pragma MPC precision(128) rounding(MPC_RNDZZ)
 {
   result = 1+1;
@@ -47,7 +47,7 @@ Ce compilateur, écrit avec Lex et Yacc, permet d'utiliser les bibliothèques MP
 
 Le code n'est modifié que s'il est placé dans une instruction `pragma`. Par exemple :
 
-```
+```c
 #pragma MPC precision(128) rounding(MPC_RNDZZ)
 {
   resultat = 1+1;
@@ -68,6 +68,15 @@ Il est également possible de supprimer les fichiers produits avec `make clean`.
 #### Avec un fichier
 
 `./main [file.c]` permet de compiler *file.c*. Le résultat est ensuite disponible dans le fichier généré *result.c*.
+
+Pour la suite, la librairie visée doit être installée.
+- `sudo apt-get install libmpc-dev` permettra d'installer MPC.
+- `sudo apt-get install libmpfr-dev` permettra d'installer MPFR.
+
+Pour ensuite compiler *result.c*, il faudra lancer `gcc -c result.c -o result.o`, puis
+
+- `gcc result.o -o main -lmpc` pour MPC.
+- `gcc result.o -o main -lmpfr` pour MPFR.
 
 #### Dans la console
 

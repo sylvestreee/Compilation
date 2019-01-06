@@ -1,6 +1,6 @@
 int main() {
 	//
-	#pragma MPC precision(128) rounding(MPC_RNDZZ) {
+	#pragma MPFR precision(128) rounding(MPFR_RNDN) {
 		(3+(4*5))*(67/5);
 		6*(9/7);
 		45-3;
