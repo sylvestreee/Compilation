@@ -71,6 +71,11 @@ START : OTHER L_PRAGMA OTHER
 			printf("%s\n", $3);
 		} else {
 			// before the pragma
+			if(strcmp(library, "MPC") == 0) {
+				fprintf(out_file, "#include \"mpc.h\"\n");
+			} else {
+				fprintf(out_file, "#include <mpfr.h>\n");
+			}
 			fprintf(out_file, "%s\n\n", $1);
 
 			// pragma content
