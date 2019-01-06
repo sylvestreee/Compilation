@@ -102,106 +102,208 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			// addition
 			case '+' :
 				if(out_file == NULL) {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is NULL (=) print in terminal
-					printf("%s_add(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is NULL (=) print in terminal
+						printf("%s_add(%s, %s, %s, %s)\n",
+							prefixe,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is NULL (=) print in terminal
+						printf("%s_add(%s, %s, %s, %s)\n",
+							prefixe,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				} else {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is not NULL (=) print in file
-					fprintf(out_file,
-						"%s_add(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_add(%s, %s, %s, %s)\n",
+							prefixe,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_add(%s, %s, %s, %s)\n",
+							prefixe,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				}
 				break;
 
 			// substraction
 			case '-' :
 				if(out_file == NULL) {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is NULL (=) print in terminal
-					printf("%s_sub(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is NULL (=) print in terminal
+						printf("%s_sub(%s, %s, %s, %s)\n",
+							prefixe,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is NULL (=) print in terminal
+						printf("%s_sub(%s, %s, %s, %s)\n",
+							prefixe,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				} else {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is not NULL (=) print in file
-					fprintf(out_file,
-						"%s_sub(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_sub(%s, %s, %s, %s)\n",
+							prefixe,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_sub(%s, %s, %s, %s)\n",
+							prefixe,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				}
 				break;
 
 			// multiplication
 			case '*' :
 				if(out_file == NULL) {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is NULL (=) print in terminal
-					printf("%s_%s(%s, %s, %s, %s)\n",
-						prefixe,
-						multPrefix,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is NULL (=) print in terminal
+						printf("%s_%s(%s, %s, %s, %s)\n",
+							prefixe,
+							multPrefix,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is NULL (=) print in terminal
+						printf("%s_%s(%s, %s, %s, %s)\n",
+							prefixe,
+							multPrefix,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				} else {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is not NULL (=) print in file
-					fprintf(out_file,
-						"%s_%s(%s, %s, %s, %s)\n",
-						prefixe,
-						multPrefix,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_%s(%s, %s, %s, %s)\n",
+							prefixe,
+							multPrefix,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_%s(%s, %s, %s, %s)\n",
+							prefixe,
+							multPrefix,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				}
 				break;
 
 			// division
 			case '/' :
 				if(out_file == NULL) {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is NULL (=) print in terminal
-					printf("%s_div(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is NULL (=) print in terminal
+						printf("%s_div(%s, %s, %s, %s)\n",
+							prefixe,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is NULL (=) print in terminal
+						printf("%s_div(%s, %s, %s, %s)\n",
+							prefixe,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				} else {
+					if(strcmp(prefixe, "mpc") == 0) {
 
-					// file is not NULL (=) print in file
-					fprintf(out_file,
-						"%s_div(%s, %s, %s, %s)\n",
-						prefixe,
-						q->arg1->id,
-						q->arg2->id,
-						q->res->id,
-						rounding
-					);
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_div(%s, %s, %s, %s)\n",
+							prefixe,
+							q->arg1->id,
+							q->arg2->id,
+							q->res->id,
+							rounding
+						);
+					} else if(strcmp(prefixe, "mpfr") == 0) {
+
+						// file is not NULL (=) print in file
+						fprintf(out_file,
+							"%s_div(%s, %s, %s, %s)\n",
+							prefixe,
+							q->res->id,
+							q->arg1->id,
+							q->arg2->id,
+							rounding
+						);
+					}
 				}
 				break;
 
