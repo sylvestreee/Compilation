@@ -19,6 +19,7 @@ IDENTIFIER	[a-zA-Z_][a-zA-Z0-9_]*
 INTEGER		[0-9]+
 FLOAT		[0-9]*\.[0-9]+
 OPERATORS 	[(){}+*-/=,;><!]
+TYPE 		int|float|char|double
 %%
 
 {PRAGMA}		{
@@ -42,6 +43,11 @@ OPERATORS 	[(){}+*-/=,;><!]
 					if(displayTokens) printf("T:fonction\n");
 					yylval.text=strdup(yytext);
 					return fonction;
+				}
+{TYPE}\**		{
+					if(displayTokens) printf("T:type\n");
+					yylval.text=strdup(yytext);
+					return type;
 				}
 {CST}			{
 					if(displayTokens) printf("T:cst\n");

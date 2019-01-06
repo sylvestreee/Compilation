@@ -48,6 +48,7 @@
 %token <entier_lex> ENTIER
 %token <flottant> n_flottant
 %token <text> fonction
+%token <text> type
 %token <text> '+' ';' '{' '}' '*' '=' '(' ')' '/' '-' ',' '>' '<' '!'
 
 %type <codegen> E LIGNES L_PRAGMA
@@ -56,10 +57,10 @@
 %type <string> OTHER L
 
 %start START
+%left '='
 %left '+' '-'
 %left '*' '/'
 %left '<' '>'
-%left '='
 %left '(' ')' '{' '}'
 
 %%
@@ -150,7 +151,7 @@ PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
 		| '<'	| '!' ;
 
-TEXTE : autre| bibli | cst | ID | fonction ;
+TEXTE : autre| bibli | cst | ID | fonction | type;
 
 ENTIER_LEX : precision | arrondi | ENTIER ;
 
@@ -292,6 +293,46 @@ E :
 		}
 		else {
 			tableQuad->next = quadInit($1, $3.result, NULL, $$.result);
+			tableQuad = tableQuad->next;
+		}
+	}
+
+	| type ID '=' E
+	{
+		symbol* newSymbol = symbolLookup(symbolTable, $2);
+		if(newSymbol == NULL) {
+			newSymbol = symbolAdd(&symbolTable, $2);
+		}
+		$$.result = newSymbol;
+		quadAdd(&$$.code, quadInit("=", $4.result, NULL, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit("=", $4.result, NULL, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit("=", $4.result, NULL, $$.result);
+			tableQuad = tableQuad->next;
+		}
+	}
+
+	| ID '=' E
+	{
+		symbol* newSymbol = symbolLookup(symbolTable, $1);
+		if(newSymbol == NULL) {
+			newSymbol = symbolAdd(&symbolTable, $1);
+		}
+		$$.result = newSymbol;
+		quadAdd(&$$.code, quadInit("=", $3.result, NULL, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit("=", $3.result, NULL, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit("=", $3.result, NULL, $$.result);
 			tableQuad = tableQuad->next;
 		}
 	}
