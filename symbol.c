@@ -4,8 +4,6 @@
   * symbolAlloc : allocate the memory for a symbol
   * Params : none
   */
-=======
->>>>>>> Stashed changes
 symbol* symbolAlloc() {
 
 	// memory allocation
