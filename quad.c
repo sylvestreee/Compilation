@@ -1,14 +1,14 @@
 #include "quad.h"
 
 /**
-  * quadInit : initialize a quad
-  * Params :
+	quadInit : initialize a quad
+	Params :
 		* op : operator
 		* arg1 : argument 1
 		* arg2 : argument 2 (optional)
-		* res : result of the op between arg1 and arg2 (
-		* 		  if arg2 is NULL, res is the result of the op on arg1
-  */
+		* res : result of the op between arg1 and arg2
+			(if arg2 is NULL, res is the result of the op on arg1)
+*/
 quad* quadInit(char* op, symbol* arg1, symbol* arg2, symbol* res) {
 
 	// memory allocation
@@ -25,10 +25,10 @@ quad* quadInit(char* op, symbol* arg1, symbol* arg2, symbol* res) {
 }
 
 /**
-  * quadFree : free a quad
-  * Params :
+	quadFree : free a quad
+	Params :
 		* q : quad to free
-  */
+*/
 void quadFree(quad* q) {
 
 	// memory deallocation
@@ -36,11 +36,11 @@ void quadFree(quad* q) {
 }
 
 /**
-  * quadAdd : add a quad to a list of quads
-  * Params :
+	quadAdd : add a quad to a list of quads
+	Params :
 		* quadList : adress of a list of quads
 		* newQuad : quad to add
-  */
+*/
 void quadAdd(quad** quadList, quad* newQuad) {
 
 	// test if the parameters are not NULL
@@ -73,14 +73,14 @@ void quadAdd(quad** quadList, quad* newQuad) {
 }
 
 /**
-  * quadPrint : print a quad
-  * Params :
+	quadPrint : print a quad
+	Params :
 		* q : quad to print
 		* outFile : file where to print (optional),
-		*						 if outFile is NULL, print is made in terminal
+					 if outFile is NULL, print is made in terminal
 		* rounding : used rounding mode
 		* library : used library (MPC or MPFR)
-  */
+*/
 void quadPrint(quad* q, FILE* outFile, char* rounding, char* library) {
 
 	// default value of prefixe
@@ -205,6 +205,7 @@ void quadPrint(quad* q, FILE* outFile, char* rounding, char* library) {
 					q->arg2->id
 				);
 			}
+		//pow
 		} else if(strcmp(q->op, "pow") == 0) {
 			if(outFile == NULL) {
 				// file is NULL (=) print in terminal
@@ -296,14 +297,14 @@ void quadPrint(quad* q, FILE* outFile, char* rounding, char* library) {
 }
 
 /**
-  * listQuadPrint : print a list of quads
-  * Params :
+	listQuadPrint : print a list of quads
+	Params :
 		* q : quad used to run through the list of quads
 		* outFile : file where to print (optional),
-		*						 if outFile is NULL, print is made in terminal
+					 if outFile is NULL, print is made in terminal
 		* rounding : used rounding mode
 		* library : used library (MPC or MPFR)
-  */
+*/
 void listQuadPrint(quad* q, FILE* outFile, char* rounding, char* library) {
 
 	// test if the quad is not NULL

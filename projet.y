@@ -22,6 +22,16 @@
 	int numPrecision = 128;
 	char* rounding = "MPC_RNDZZ";
 
+	/**
+		makeQuadList : construct the list of the quad
+		in order to print it in the file
+		Params :
+			* op : operator
+			* arg1 : argument 1
+			* arg2 : argument 2 (optional)
+			* res : result of the op between arg1 and arg2
+				(if arg2 is NULL, res is the result of the op on arg1)
+	*/
 	void makeQuadList(char* op, symbol* arg1, symbol* arg2, symbol* res) {
 		if(firstQuad == 0) {
 			tableQuad = quadInit(op, arg1, arg2, res);
@@ -211,8 +221,8 @@ E :
 	'-' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
-		quadAdd(&$$.code, quadInit("neg", $2.result, NULL, $$.result));
-		makeQuadList("neg", $2.result, NULL, $$.result);
+		quadAdd(&$$.code, quadInit("neg", $2.result, NULL, $2.result));
+		makeQuadList("neg", $2.result, NULL, $2.result);
 	}
 	| E '+' '+'
 	{
@@ -358,6 +368,8 @@ int main(int argc, char* argv[]) {
 		outFile = fopen("result.c", "w");
 		yyparse();
 		fclose(outFile);
+
+		//free the quads
 		quad* quadTemp = first;
 		quad* quadTemp2;
 		while(quadTemp != NULL) {

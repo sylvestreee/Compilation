@@ -1,9 +1,9 @@
 #include "symbol.h"
 
 /**
-  * symbolAlloc : allocate the memory for a symbol
-  * Params : none
-  */
+	symbolAlloc : allocate the memory for a symbol
+	Params : none
+*/
 symbol* symbolAlloc() {
 
 	// memory allocation
@@ -12,10 +12,10 @@ symbol* symbolAlloc() {
 }
 
 /**
-  * symbolFree : free a symbol
-  * Params :
+	symbolFree : free a symbol
+	Params :
 		* sym : symbol to free
-  */
+*/
 void symbolFree(symbol* sym) {
 	if(sym != NULL) {
 
@@ -25,11 +25,11 @@ void symbolFree(symbol* sym) {
 }
 
 /**
-  * symbolNewTemp : create a new temporary variable
-	* 								and add it to the symbole table
-  * Params :
+	symbolNewTemp : create a new temporary variable
+				and add it to the symbole table
+	Params :
 		* TS : adress of the symbol table
-  */
+*/
 symbol* symbolNewTemp(symbol** TS) {
 	char buffer[1024];
 	static int cptTemp = 0;
@@ -40,11 +40,11 @@ symbol* symbolNewTemp(symbol** TS) {
 }
 
 /**
-  * symbolLookup : look if a symbol already exists or not
-  * Params :
+	symbolLookup : look if a symbol already exists or not
+	Params :
 		* TS : symbol used to run through the symbol table
 		* name : name of the symbol
-  */
+*/
 symbol* symbolLookup(symbol* TS, char* name) {
 
 	// run through the symbol table
@@ -58,11 +58,11 @@ symbol* symbolLookup(symbol* TS, char* name) {
 }
 
 /**
-  * symbolAdd : add a symbol to the symbol table
-  * Params :
+	symbolAdd : add a symbol to the symbol table
+	Params :
 		* TS : adress of a symbol table
 		* name : name of the symbol
-  */
+*/
 symbol* symbolAdd(symbol** TS, char* name) {
 	symbol* new = symbolAlloc();
 	new->id = strdup(name);
@@ -84,10 +84,10 @@ symbol* symbolAdd(symbol** TS, char* name) {
 }
 
 /**
-  * symbolTablePrint : print a symbol table
-  * Params :
+	symbolTablePrint : print a symbol table
+	Params :
 		* TS : adress of the symbol table to print
-  */
+*/
 void symbolTablePrint(symbol** TS) {
 	printf("___________\n");
 	printf("Symbol Table\n");
@@ -107,10 +107,10 @@ void symbolTablePrint(symbol** TS) {
 }
 
 /**
-  * symbolPrint : print a symbol
-  * Params :
+	symbolPrint : print a symbol
+	Params :
 		* sym : symbol to print
-  */
+*/
 void symbolPrint(symbol* sym) {
 	printf("%s: %d%s\n",
 		sym->id, sym->value, sym->isConstant == true ? "(CST)" : ""
@@ -118,14 +118,14 @@ void symbolPrint(symbol* sym) {
 }
 
 /**
-  * initVariables : print all variables initialisations
-  * Params :
+	initVariables : print all variables initialisations
+	Params :
 		* TS : adress of the symbol table containing the temporary variables
 		* outFile : file where to print
 		* library : used library (MPC or MPFR)
 		* precision : used precision
 		* rouding : used rouding mode
-  */
+*/
 void initVariables(symbol** TS, FILE* outFile, char* library, int precision, char* rounding) {
 
 	// default value of prefixe
@@ -198,12 +198,12 @@ void initVariables(symbol** TS, FILE* outFile, char* library, int precision, cha
 }
 
 /**
-  * desallocVariables : print all variables desallocations
-  * Params :
+	desallocVariables : print all variables desallocations
+	Params :
 		* TS : adress of the symbol table containing the temporary variables
 		* outFile : file where to print
 		* library : used library (MPC or MPFR)
-  */
+*/
 void desallocVariables(symbol** TS, FILE* outFile, char* library) {
 
 	// default value of prefixe
