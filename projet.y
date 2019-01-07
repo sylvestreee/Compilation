@@ -50,6 +50,7 @@
 %token <text> fonction
 %token <text> pow
 %token <text> type
+%token <text> header
 %token <text> '+' ';' '{' '}' '*' '=' '(' ')' '/' '-' ',' '>' '<' '!' '.' '#'
 
 %type <codegen> E LIGNES L_PRAGMA
@@ -154,7 +155,7 @@ PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
 		| '<'	| '!'	| '.'	| '#';
 
-TEXTE : autre| bibli | cst | ID | fonction | type;
+TEXTE : autre| bibli | cst | ID | fonction | type | header;
 
 ENTIER_LEX : precision | arrondi | ENTIER ;
 
@@ -184,11 +185,22 @@ LIGNES :
 	;
 
 E :
-	// '-' E
-	// {
-	// 	// #TODO
-	// }
-	E '+' '+'
+	'-' E
+	{
+		$$.result = symbolNewTemp(&symbolTable);
+		quadAdd(&$$.code, quadInit("neg", $2.result, NULL, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit("neg", $2.result, NULL, $$.result);
+			first = tableQuad;
+			firstQuad =1;
+		}
+		else {
+			tableQuad->next = quadInit("neg", $2.result, NULL, $$.result);
+			tableQuad = tableQuad->next;
+		}
+	}
+	| E '+' '+'
 	{
 		symbol* newSymbol = symbolNewTemp(&symbolTable);
 		newSymbol->isConstant = true;

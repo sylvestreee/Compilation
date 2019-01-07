@@ -21,6 +21,7 @@ INTEGER		[0-9]+
 FLOAT		[0-9]*\.[0-9]+
 OPERATORS 	[(){}+*-/=,;><!\.#]
 TYPE 		int|float|char|double
+HEADER 		^[ \t]*#include[ ]+<[A-Za-z_]+\.h>|^[ \t]*#include[ ]+"[A-Za-z_]+\.h"
 %%
 
 {PRAGMA}		{
@@ -79,6 +80,12 @@ TYPE 		int|float|char|double
 					if(displayTokens) printf("T:%c\n", yytext[0]);
 					yylval.text=strdup(yytext);
 					return yytext[0];
+				}
+
+{HEADER}		{
+					if(displayTokens) printf("T:HEADER\n");
+					yylval.text=strdup(yytext);
+					return header;
 				}
 
 {SPACE}			{ if(displayTokens) printf("T:space\n"); }
