@@ -62,14 +62,14 @@ HEADER 		^[ \t]*#include[ ]+<[A-Za-z_]+\.h>|^[ \t]*#include[ ]+"[A-Za-z_]+\.h"
 					return cst;
 				}
 {IDENTIFIER} 	{
-					if(displayTokens) printf("T:ID\n");
+					if(displayTokens) printf("T:id\n");
 					yylval.text=strdup(yytext);
-					return ID;
+					return id;
 				}
 {INTEGER}    	{
-					if(displayTokens) printf("T:ENTIER\n");
+					if(displayTokens) printf("T:entier\n");
 					yylval.entierLex=atoi(yytext);
-					return ENTIER;
+					return entier;
 				}
 {FLOAT}			{
 					if(displayTokens) printf("T:nFlottant\n");
