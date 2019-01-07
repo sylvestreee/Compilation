@@ -95,7 +95,7 @@ Cette option est utile pour le développement.
 
 ### Expressions mathématiques gérées
 
-- Opérateurs binaires : **+ \* / - =**
-- Opérateurs unaires : non gérés
+- Opérateurs binaires : **+**, **\***, **/**, **-**, **=**
+- Opérateurs unaires : **-**, **var++**, **var--**
 - Fonctions mathématiques : voir `projet.l`
 - Boucles et conditions : non gérées

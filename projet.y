@@ -21,6 +21,17 @@
 	char* library = "MPC";
 	int numPrecision = 128;
 	char* rounding = "MPC_RNDZZ";
+
+	void makeQuadList(char* op, symbol* arg1, symbol* arg2, symbol* res) {
+		if(firstQuad == 0) {
+			tableQuad = quadInit(op, arg1, arg2, res);
+			first = tableQuad;
+			firstQuad = 1;
+		} else {
+			tableQuad->next = quadInit(op, arg1, arg2, res);
+			tableQuad = tableQuad->next;
+		}
+	}
 %}
 
 %union {
@@ -29,22 +40,20 @@
 		struct quadS* code;
 	} codegen;
 
-	char* string;
-
 	char* text;
 	float flottant;
 	int entierLex;
 };
 
 %token pragma
-%token <string> retour
+%token <text> retour
 %token <text> bibli
 %token <text> autre
 %token <entierLex> precision
 %token <entierLex> arrondi
 %token <text> cst
-%token <text> ID
-%token <entierLex> ENTIER
+%token <text> id
+%token <entierLex> entier
 %token <flottant> nFlottant
 %token <text> fonction
 %token <text> pow
@@ -55,7 +64,7 @@
 %type <codegen> E LIGNES L_PRAGMA
 %type <text> TEXTE PONCT
 %type <entierLex> entierLex
-%type <string> OTHER L
+%type <text> OTHER L
 
 %start START
 %left '='
@@ -66,6 +75,8 @@
 
 %%
 
+//OTHER recognize and rewrite the text that is outside the pragma
+//L_PRAGMA recognize the pragma
 START : OTHER L_PRAGMA OTHER
 	{
 		if(outFile == NULL) {
@@ -92,6 +103,9 @@ START : OTHER L_PRAGMA OTHER
 	;
 
 L_PRAGMA :
+	//#pragma MPC|MPFR precision(entier) rounding(cst)
+	//ARGUMENT recognize the precision and the rounding
+	//LIGNES recognize the code inside the pragma
 	pragma bibli ARGUMENT ARGUMENT '{' LIGNES '}' retour
 	{
 		// get the library to use
@@ -103,6 +117,20 @@ L_PRAGMA :
 		$$.code = $6.code;
 	}
 
+ARGUMENT :
+	precision '(' entier ')'
+	{
+		numPrecision = $3;
+	}
+
+	| arrondi '(' cst ')'
+	{
+		rounding = $3;
+	}
+	;
+/* ---------------------------------- */
+/* Grammar before and after the pragma */
+//L for multiples lines
 OTHER: L retour OTHER
 	{
 		$$ = strcat(strcat($1, "\n"), $3);
@@ -110,6 +138,7 @@ OTHER: L retour OTHER
 	| L retour;
 
 L:
+	//PONCT recognize all of the operator
 	PONCT
 	{
 		$$ = $1;
@@ -128,6 +157,7 @@ L:
 			$$ = strcat(strcat($1," "),$2);
 		}
 	}
+	//TEXT recognize all type of text
 	| TEXTE L
 	{
 		$$ = strcat(strcat($1," "),$2);
@@ -136,12 +166,14 @@ L:
 	{
 		$$ = strcat($1," ");
 	}
+	//entierLex recognize all int
 	| entierLex L
 	{
 		char str[250];
 		sprintf(str,"%d",$1);
 		$$ = strcat(strcat(str," "),$2);
 	}
+	//nFlottant recognize all float
 	| nFlottant L
 	{
 		char str[250];
@@ -154,22 +186,14 @@ PONCT :   '+'	| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
 		| '<'	| '!'	| '.'	| '#';
 
-TEXTE : autre | bibli | cst | ID | fonction | type | header;
+TEXTE : autre | bibli | cst | id | fonction | type | header;
 
-entierLex : precision | arrondi | ENTIER ;
+entierLex : precision | arrondi | entier ;
 
-ARGUMENT :
-	precision '(' ENTIER ')'
-	{
-		numPrecision = $3;
-	}
+/* -------------------------*/
 
-	| arrondi '(' cst ')'
-	{
-		rounding = $3;
-	}
-	;
-
+/* Grammar that recognize the code inside the pragma */
+/* All lignes must end with à ; */
 LIGNES :
 	retour E ';' retour LIGNES
 	{}
@@ -188,16 +212,7 @@ E :
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit("neg", $2.result, NULL, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("neg", $2.result, NULL, $$.result);
-			first = tableQuad;
-			firstQuad =1;
-		}
-		else {
-			tableQuad->next = quadInit("neg", $2.result, NULL, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList("neg", $2.result, NULL, $$.result);
 	}
 	| E '+' '+'
 	{
@@ -205,16 +220,7 @@ E :
 		newSymbol->isConstant = true;
 		newSymbol->value = 1;
 		quadAdd(&$$.code, quadInit("+", $1.result, newSymbol, $1.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("+", $1.result, newSymbol, $1.result);
-			first = tableQuad;
-			firstQuad =1;
-		} else {
-			tableQuad->next = quadInit("+", $1.result, newSymbol, $1.result);
-			tableQuad = tableQuad->next;
-		}
-
+		makeQuadList("+", $1.result, newSymbol, $1.result);
 	}
 	| E '-' '-'
 	{
@@ -222,76 +228,34 @@ E :
 		newSymbol->isConstant = true;
 		newSymbol->value = 1;
 		quadAdd(&$$.code, quadInit("-", $1.result, newSymbol, $1.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("-", $1.result, newSymbol, $1.result);
-			first = tableQuad;
-			firstQuad =1;
-		} else {
-			tableQuad->next = quadInit("-", $1.result, newSymbol, $1.result);
-			tableQuad = tableQuad->next;
-		}
-
+		makeQuadList("-", $1.result, newSymbol, $1.result);
 	}
 	| E '+' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit("+", $1.result, $3.result, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("+", $1.result, $3.result, $$.result);
-			first = tableQuad;
-			firstQuad =1;
-		} else {
-			tableQuad->next = quadInit("+", $1.result, $3.result, $$.result);
-			tableQuad = tableQuad->next;
-		}
-
+		makeQuadList("+", $1.result, $3.result, $$.result);
 	}
 
 	| E '-' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit("-", $1.result, $3.result, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("-", $1.result, $3.result, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit("-", $1.result, $3.result, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList("-", $1.result, $3.result, $$.result);
 	}
 
 	| E '*' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit("*", $1.result, $3.result, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("*", $1.result, $3.result, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit("*", $1.result, $3.result, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList("*", $1.result, $3.result, $$.result);
 	}
 
 	| E '/' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit("/", $1.result, $3.result, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("/", $1.result, $3.result, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit("/", $1.result, $3.result, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList("/", $1.result, $3.result, $$.result);
 	}
 
 	| E '>' E
@@ -328,33 +292,17 @@ E :
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit($1, $3.result, $5.result, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit($1, $3.result, $5.result, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit($1, $3.result, $5.result, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList($1, $3.result, $5.result, $$.result);
 	}
 
 	| fonction '(' E ')'
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit($1, $3.result, NULL, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit($1, $3.result, NULL, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit($1, $3.result, NULL, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList($1, $3.result, NULL, $$.result);
 	}
 
-	| type ID '=' E
+	| type id '=' E
 	{
 		symbol* newSymbol = symbolLookup(symbolTable, $2);
 		if(newSymbol == NULL) {
@@ -362,18 +310,10 @@ E :
 		}
 		$$.result = newSymbol;
 		quadAdd(&$$.code, quadInit("=", $4.result, NULL, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("=", $4.result, NULL, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit("=", $4.result, NULL, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList("=", $4.result, NULL, $$.result);
 	}
 
-	| ID '=' E
+	| id '=' E
 	{
 		symbol* newSymbol = symbolLookup(symbolTable, $1);
 		if(newSymbol == NULL) {
@@ -381,20 +321,12 @@ E :
 		}
 		$$.result = newSymbol;
 		quadAdd(&$$.code, quadInit("=", $3.result, NULL, $$.result));
-
-		if(firstQuad == 0) {
-			tableQuad = quadInit("=", $3.result, NULL, $$.result);
-			first = tableQuad;
-			firstQuad = 1;
-		} else {
-			tableQuad->next = quadInit("=", $3.result, NULL, $$.result);
-			tableQuad = tableQuad->next;
-		}
+		makeQuadList("=", $3.result, NULL, $$.result);
 	}
 
-	| ID
+	| id
 	{
-		// add ID only if it's not in symbol table
+		// add id only if it's not in symbol table
 		symbol* newSymbol = symbolLookup(symbolTable, $1);
 		if(newSymbol == NULL) {
 			newSymbol = symbolAdd(&symbolTable, $1);
@@ -402,7 +334,7 @@ E :
 		$$.result = newSymbol;
 		$$.code = NULL;
 	}
-	| ENTIER
+	| entier
 	{
 		symbol* newSymbol = symbolNewTemp(&symbolTable);
 		newSymbol->isConstant = true;
@@ -426,7 +358,13 @@ int main(int argc, char* argv[]) {
 		outFile = fopen("result.c", "w");
 		yyparse();
 		fclose(outFile);
-
+		quad* quadTemp = first;
+		quad* quadTemp2;
+		while(quadTemp != NULL) {
+			quadTemp2 = quadTemp->next;
+			quadFree(quadTemp);
+			quadTemp = quadTemp2;
+		}
 	} else {
 		yyparse();
 	}
