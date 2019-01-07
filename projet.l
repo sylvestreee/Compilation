@@ -7,18 +7,19 @@
 	int displayTokens = 0;
 %}
 
-PRAGMA		^[ \t]?#pragma
+PRAGMA		^[ \t]*#pragma
 LIBRARY		MPFR|MPC
 PRECISION	precision
 ROUNDING	rounding
-FUNCTION	sqrt|pow|abs|div|exp|log|sin|cos|tan|asin|acos|atan
+FUNCTION	sqrt|abs|div|exp|log|sin|cos|tan|asin|acos|atan
+POW			pow
 CST			[A-Z_]*
 SPACE		[ \t]+
 NEWLINE		[\n]+
 IDENTIFIER	[a-zA-Z_][a-zA-Z0-9_]*
 INTEGER		[0-9]+
 FLOAT		[0-9]*\.[0-9]+
-OPERATORS 	[(){}+*-/=,;><!]
+OPERATORS 	[(){}+*-/=,;><!\.#]
 TYPE 		int|float|char|double
 %%
 
@@ -38,6 +39,11 @@ TYPE 		int|float|char|double
 {ROUNDING}		{
 					if(displayTokens) printf("T:arrondi\n");
 					return arrondi;
+				}
+{POW}			{
+					if(displayTokens) printf("T:pow\n");
+					yylval.text=strdup(yytext);
+					return pow;
 				}
 {FUNCTION}		{
 					if(displayTokens) printf("T:fonction\n");

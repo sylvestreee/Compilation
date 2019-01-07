@@ -205,6 +205,27 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 					q->arg2->id
 				);
 			}
+		} else if(strcmp(q->op, "pow") == 0) {
+			if(out_file == NULL) {
+				// file is NULL (=) print in terminal
+				printf("%s_pow(%s, %s, %s, %s);\n",
+					prefixe,
+					q->res->id,
+					q->arg1->id,
+					q->arg2->id,
+					rounding
+				);
+			} else {
+				// file is not NULL (=) print in file
+				fprintf(out_file,
+					"%s_pow(%s, %s, %s, %s);\n",
+					prefixe,
+					q->res->id,
+					q->arg1->id,
+					q->arg2->id,
+					rounding
+				);
+			}
 		// unknown operator
 		} else {
 			if(out_file == NULL) {

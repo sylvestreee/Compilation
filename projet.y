@@ -48,8 +48,9 @@
 %token <entier_lex> ENTIER
 %token <flottant> n_flottant
 %token <text> fonction
+%token <text> pow
 %token <text> type
-%token <text> '+' ';' '{' '}' '*' '=' '(' ')' '/' '-' ',' '>' '<' '!'
+%token <text> '+' ';' '{' '}' '*' '=' '(' ')' '/' '-' ',' '>' '<' '!' '.' '#'
 
 %type <codegen> E LIGNES L_PRAGMA
 %type <text> TEXTE PONCT
@@ -121,6 +122,8 @@ L:
 			$$ = strcat($1, $2);
 		} else if((strncmp($1,"*",1) == 0) && (strncmp($2, "/",1) == 0)) {
 			$$ = strcat($1, $2);
+		} else if((strncmp($1,"#",1) == 0)) {
+			$$ = strcat($1, $2);
 		} else {
 			$$ = strcat(strcat($1," "),$2);
 		}
@@ -149,7 +152,7 @@ L:
 
 PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
-		| '<'	| '!' ;
+		| '<'	| '!'	| '.'	| '#';
 
 TEXTE : autre| bibli | cst | ID | fonction | type;
 
@@ -279,6 +282,23 @@ E :
 	{
 		$$.result = $2.result;
 		$$.code = $2.code;
+	}
+
+	| pow '(' E ',' E ')'
+	{
+		printf("hey\n");
+		$$.result = symbolNewTemp(&symbolTable);
+		quadAdd(&$$.code, quadInit($1, $3.result, $5.result, $$.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit($1, $3.result, $5.result, $$.result);
+			first = tableQuad;
+			firstQuad = 1;
+		}
+		else {
+			tableQuad->next = quadInit($1, $3.result, $5.result, $$.result);
+			tableQuad = tableQuad->next;
+		}
 	}
 
 	| fonction '(' E ')'
