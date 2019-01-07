@@ -8,6 +8,8 @@ int main () {
 		4+4;
 		cos(42);
 		pow(1+1,1+2);
+		a++;
+		a--;
 	}
 	int hello;
 }

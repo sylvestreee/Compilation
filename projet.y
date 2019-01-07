@@ -188,8 +188,43 @@ E :
 	// {
 	// 	// #TODO
 	// }
+	E '+' '+'
+	{
+		symbol* newSymbol = symbolNewTemp(&symbolTable);
+		newSymbol->isConstant = true;
+		newSymbol->value = 1;
+		quadAdd(&$$.code, quadInit("+", $1.result, newSymbol, $1.result));
 
-	E '+' E
+		if(firstQuad == 0) {
+			tableQuad = quadInit("+", $1.result, newSymbol, $1.result);
+			first = tableQuad;
+			firstQuad =1;
+		}
+		else {
+			tableQuad->next = quadInit("+", $1.result, newSymbol, $1.result);
+			tableQuad = tableQuad->next;
+		}
+
+	}
+	| E '-' '-'
+	{
+		symbol* newSymbol = symbolNewTemp(&symbolTable);
+		newSymbol->isConstant = true;
+		newSymbol->value = 1;
+		quadAdd(&$$.code, quadInit("-", $1.result, newSymbol, $1.result));
+
+		if(firstQuad == 0) {
+			tableQuad = quadInit("-", $1.result, newSymbol, $1.result);
+			first = tableQuad;
+			firstQuad =1;
+		}
+		else {
+			tableQuad->next = quadInit("-", $1.result, newSymbol, $1.result);
+			tableQuad = tableQuad->next;
+		}
+
+	}
+	| E '+' E
 	{
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit("+", $1.result, $3.result, $$.result));
@@ -286,7 +321,6 @@ E :
 
 	| pow '(' E ',' E ')'
 	{
-		printf("hey\n");
 		$$.result = symbolNewTemp(&symbolTable);
 		quadAdd(&$$.code, quadInit($1, $3.result, $5.result, $$.result));
 
