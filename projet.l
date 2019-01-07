@@ -11,7 +11,7 @@ PRAGMA		^[ \t]*#pragma
 LIBRARY		MPFR|MPC
 PRECISION	precision
 ROUNDING	rounding
-FUNCTION	sqrt|abs|div|exp|log|sin|cos|tan|asin|acos|atan
+FUNCTION	sqrt|div|exp|log|sin|cos|tan|asin|acos|atan
 POW			pow
 CST			[A-Z_]*
 SPACE		[ \t]+
