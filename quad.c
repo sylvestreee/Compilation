@@ -76,12 +76,12 @@ void quadAdd(quad** quadList, quad* newQuad) {
   * quadPrint : print a quad
   * Params :
 		* q : quad to print
-		* out_file : file where to print (optional),
-		*						 if out_file is NULL, print is made in terminal
+		* outFile : file where to print (optional),
+		*						 if outFile is NULL, print is made in terminal
 		* rounding : used rounding mode
 		* library : used library (MPC or MPFR)
   */
-void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
+void quadPrint(quad* q, FILE* outFile, char* rounding, char* library) {
 
 	// default value of prefixe
 	char* prefixe = "mpc";
@@ -98,7 +98,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 
 		// addition
 		if(strcmp(q->op, "+") == 0) {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				// file is NULL (=) print in terminal
 				printf("%s_add(%s, %s, %s, %s);\n",
 					prefixe,
@@ -109,7 +109,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			} else {
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_add(%s, %s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -120,7 +120,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			}
 		// substraction
 		} else if(strcmp(q->op, "-") == 0) {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				// file is NULL (=) print in terminal
 				printf("%s_sub(%s, %s, %s, %s);\n",
 					prefixe,
@@ -131,7 +131,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			} else {
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_sub(%s, %s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -142,7 +142,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			}
 			// multiplication
 		} else if(strcmp(q->op, "*") == 0) {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				// file is NULL (=) print in terminal
 				printf("%s_mul(%s, %s, %s, %s);\n",
 					prefixe,
@@ -153,7 +153,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			} else {
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_mul(%s, %s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -164,7 +164,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			}
 		// division
 		} else if(strcmp(q->op, "/") == 0) {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				// file is NULL (=) print in terminal
 				printf("%s_div(%s, %s, %s, %s);\n",
 					prefixe,
@@ -175,7 +175,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			} else {
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_div(%s, %s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -187,7 +187,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 		// inferior / superior / superior or equal / inferior or equal
 		} else if((strcmp(q->op, "<") == 0) || (strcmp(q->op, ">") == 0)
 		|| (strcmp(q->op, "s") == 0) || (strcmp(q->op, "i") == 0)) {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 
 				// file is NULL (=) print in terminal
 				printf("%s_cmp(%s, %s);\n",
@@ -198,7 +198,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			} else {
 
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_cmp(%s, %s);\n",
 					prefixe,
 					q->arg1->id,
@@ -206,7 +206,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			}
 		} else if(strcmp(q->op, "pow") == 0) {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				// file is NULL (=) print in terminal
 				printf("%s_pow(%s, %s, %s, %s);\n",
 					prefixe,
@@ -217,7 +217,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			} else {
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_pow(%s, %s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -228,7 +228,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			}
 		// unknown operator
 		} else {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 
 				// file is NULL (=) print in terminal
 				printf("%s = %s(%d) %s %s(%d)\n",
@@ -240,7 +240,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			} else {
 
 				// file is not NULL (=) print in file
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s = %s(%d) %s %s(%d)\n",
 					q->res->id,
 					q->arg1->id,q->arg1->value,
@@ -254,7 +254,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 	} else {
 
 		if(strcmp(q->op, "=") == 0)  {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				printf("%s_set(%s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -263,7 +263,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 				);
 			} else {
 				fprintf(
-					out_file,
+					outFile,
 					"%s_set(%s, %s, %s);\n",
 					prefixe,
 					q->res->id,
@@ -273,7 +273,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 			}
 		// FUNCTIONS
 		} else {
-			if(out_file == NULL) {
+			if(outFile == NULL) {
 				printf("%s_%s(%s, %s, %s);\n",
 					prefixe,
 					q->op,
@@ -282,7 +282,7 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
 					rounding
 				);
 			} else {
-				fprintf(out_file,
+				fprintf(outFile,
 					"%s_%s(%s, %s, %s);\n",
 					prefixe,
 					q->op,
@@ -299,23 +299,23 @@ void quadPrint(quad* q, FILE* out_file, char* rounding, char* library) {
   * listQuadPrint : print a list of quads
   * Params :
 		* q : quad used to run through the list of quads
-		* out_file : file where to print (optional),
-		*						 if out_file is NULL, print is made in terminal
+		* outFile : file where to print (optional),
+		*						 if outFile is NULL, print is made in terminal
 		* rounding : used rounding mode
 		* library : used library (MPC or MPFR)
   */
-void listQuadPrint(quad *q, FILE* out_file, char* rounding, char* library) {
+void listQuadPrint(quad* q, FILE* outFile, char* rounding, char* library) {
 
 	// test if the quad is not NULL
 	if(q != NULL) {
-		quad* quad_temp = (quad* )malloc(sizeof(quad));
-		quad_temp = q;
+		quad* quadTemp = (quad* )malloc(sizeof(quad));
+		quadTemp = q;
 
 		// run through the list
-		while(quad_temp != NULL) {
-			quadPrint(quad_temp, out_file, rounding, library);
-			quad_temp = quad_temp->next;
+		while(quadTemp != NULL) {
+			quadPrint(quadTemp, outFile, rounding, library);
+			quadTemp = quadTemp->next;
 		}
 	}
-	fprintf(out_file, "\n");
+	fprintf(outFile, "\n");
 }

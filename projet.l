@@ -68,13 +68,13 @@ HEADER 		^[ \t]*#include[ ]+<[A-Za-z_]+\.h>|^[ \t]*#include[ ]+"[A-Za-z_]+\.h"
 				}
 {INTEGER}    	{
 					if(displayTokens) printf("T:ENTIER\n");
-					yylval.entier_lex=atoi(yytext);
+					yylval.entierLex=atoi(yytext);
 					return ENTIER;
 				}
 {FLOAT}			{
-					if(displayTokens) printf("T:n_flottant\n");
+					if(displayTokens) printf("T:nFlottant\n");
 					yylval.flottant=atof(yytext);
-					return n_flottant;
+					return nFlottant;
 				}
 {OPERATORS}   	{
 					if(displayTokens) printf("T:%c\n", yytext[0]);
@@ -88,7 +88,9 @@ HEADER 		^[ \t]*#include[ ]+<[A-Za-z_]+\.h>|^[ \t]*#include[ ]+"[A-Za-z_]+\.h"
 					return header;
 				}
 
-{SPACE}			{ if(displayTokens) printf("T:space\n"); }
+{SPACE}			{
+					if(displayTokens) printf("T:space\n");
+				}
 {NEWLINE}		{
 					if(displayTokens) printf("T:retour\n");
 					return retour;

@@ -8,10 +8,10 @@
 
 // symbol type
 typedef struct symbolS {
-	char *id;
+	char* id;
 	bool isConstant;
 	int value;
-	struct symbolS *next;
+	struct symbolS* next;
 } symbol;
 
 // functions
@@ -20,9 +20,9 @@ void symbolFree(symbol* sym);
 symbol* symbolNewTemp(symbol** TS);
 symbol* symbolLookup(symbol* TS, char* name);
 symbol* symbolAdd(symbol** TS, char* name);
-void symbolTablePrint(symbol **TS);
+void symbolTablePrint(symbol** TS);
 void symbolPrint(symbol* sym);
-void initVariables(symbol** TS, FILE* out_file, char* library, int precision, char* rounding);
-void desallocVariables(symbol** TS, FILE* out_file, char* library);
+void initVariables(symbol** TS, FILE* outFile, char* library, int precision, char* rounding);
+void desallocVariables(symbol** TS, FILE* outFile, char* library);
 
 #endif

@@ -1,5 +1,4 @@
 %{
-	#include "utils.h"
 	#include "quad.h"
 	#include "symbol.h"
 
@@ -16,11 +15,11 @@
 	quad* first = NULL;
 
 	FILE* yyin;
-	FILE* out_file;
+	FILE* outFile;
 	symbol* symbolTable = NULL;
 
 	char* library = "MPC";
-	int num_precision = 128;
+	int numPrecision = 128;
 	char* rounding = "MPC_RNDZZ";
 %}
 
@@ -30,23 +29,23 @@
 		struct quadS* code;
 	} codegen;
 
-	char * string;
+	char* string;
 
 	char* text;
 	float flottant;
-	int entier_lex;
+	int entierLex;
 };
 
 %token pragma
 %token <string> retour
 %token <text> bibli
 %token <text> autre
-%token <entier_lex> precision
-%token <entier_lex> arrondi
+%token <entierLex> precision
+%token <entierLex> arrondi
 %token <text> cst
 %token <text> ID
-%token <entier_lex> ENTIER
-%token <flottant> n_flottant
+%token <entierLex> ENTIER
+%token <flottant> nFlottant
 %token <text> fonction
 %token <text> pow
 %token <text> type
@@ -55,7 +54,7 @@
 
 %type <codegen> E LIGNES L_PRAGMA
 %type <text> TEXTE PONCT
-%type <entier_lex> ENTIER_LEX
+%type <entierLex> entierLex
 %type <string> OTHER L
 
 %start START
@@ -69,25 +68,25 @@
 
 START : OTHER L_PRAGMA OTHER
 	{
-		if(out_file == NULL) {
+		if(outFile == NULL) {
 			printf("%s\n", $1);
 			printf("%s\n", $3);
 		} else {
 			// before the pragma
 			if(strcmp(library, "MPC") == 0) {
-				fprintf(out_file, "#include \"mpc.h\"\n");
+				fprintf(outFile, "#include \"mpc.h\"\n");
 			} else {
-				fprintf(out_file, "#include <mpfr.h>\n");
+				fprintf(outFile, "#include <mpfr.h>\n");
 			}
-			fprintf(out_file, "%s\n\n", $1);
+			fprintf(outFile, "%s\n\n", $1);
 
 			// pragma content
-			initVariables(&symbolTable, out_file, library, num_precision, rounding);
-			listQuadPrint(first, out_file, rounding, library);
-			desallocVariables(&symbolTable, out_file, library);
+			initVariables(&symbolTable, outFile, library, numPrecision, rounding);
+			listQuadPrint(first, outFile, rounding, library);
+			desallocVariables(&symbolTable, outFile, library);
 
 			// after the pragma
-			fprintf(out_file, "\n%s\n", $3);
+			fprintf(outFile, "\n%s\n", $3);
 		}
 	}
 	;
@@ -137,13 +136,13 @@ L:
 	{
 		$$ = strcat($1," ");
 	}
-	| ENTIER_LEX L
+	| entierLex L
 	{
 		char str[250];
 		sprintf(str,"%d",$1);
 		$$ = strcat(strcat(str," "),$2);
 	}
-	| n_flottant L
+	| nFlottant L
 	{
 		char str[250];
 		sprintf(str,"%f",$1);
@@ -151,18 +150,18 @@ L:
 	}
 	;
 
-PONCT : '+'		| ';'	| '{'	| '}' 	| '*' 	| '='
+PONCT :   '+'	| ';'	| '{'	| '}' 	| '*' 	| '='
 		| '('	| ')'	| '/'	| '-' 	| ','	| '>'
 		| '<'	| '!'	| '.'	| '#';
 
-TEXTE : autre| bibli | cst | ID | fonction | type | header;
+TEXTE : autre | bibli | cst | ID | fonction | type | header;
 
-ENTIER_LEX : precision | arrondi | ENTIER ;
+entierLex : precision | arrondi | ENTIER ;
 
 ARGUMENT :
 	precision '(' ENTIER ')'
 	{
-		num_precision = $3;
+		numPrecision = $3;
 	}
 
 	| arrondi '(' cst ')'
@@ -211,8 +210,7 @@ E :
 			tableQuad = quadInit("+", $1.result, newSymbol, $1.result);
 			first = tableQuad;
 			firstQuad =1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("+", $1.result, newSymbol, $1.result);
 			tableQuad = tableQuad->next;
 		}
@@ -229,8 +227,7 @@ E :
 			tableQuad = quadInit("-", $1.result, newSymbol, $1.result);
 			first = tableQuad;
 			firstQuad =1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("-", $1.result, newSymbol, $1.result);
 			tableQuad = tableQuad->next;
 		}
@@ -245,8 +242,7 @@ E :
 			tableQuad = quadInit("+", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad =1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("+", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -262,8 +258,7 @@ E :
 			tableQuad = quadInit("-", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("-", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -278,8 +273,7 @@ E :
 			tableQuad = quadInit("*", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("*", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -294,8 +288,7 @@ E :
 			tableQuad = quadInit("/", $1.result, $3.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("/", $1.result, $3.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -340,8 +333,7 @@ E :
 			tableQuad = quadInit($1, $3.result, $5.result, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit($1, $3.result, $5.result, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -356,8 +348,7 @@ E :
 			tableQuad = quadInit($1, $3.result, NULL, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit($1, $3.result, NULL, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -376,8 +367,7 @@ E :
 			tableQuad = quadInit("=", $4.result, NULL, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("=", $4.result, NULL, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -396,8 +386,7 @@ E :
 			tableQuad = quadInit("=", $3.result, NULL, $$.result);
 			first = tableQuad;
 			firstQuad = 1;
-		}
-		else {
+		} else {
 			tableQuad->next = quadInit("=", $3.result, NULL, $$.result);
 			tableQuad = tableQuad->next;
 		}
@@ -434,10 +423,9 @@ int main(int argc, char* argv[]) {
 		}
 
 		// opens a file to write the result in it
-		out_file = fopen("result.c", "w");
+		outFile = fopen("result.c", "w");
 		yyparse();
-		end_file(compt, out_file);
-		fclose(out_file);
+		fclose(outFile);
 
 	} else {
 		yyparse();

@@ -121,12 +121,12 @@ void symbolPrint(symbol* sym) {
   * initVariables : print all variables initialisations
   * Params :
 		* TS : adress of the symbol table containing the temporary variables
-		* out_file : file where to print
+		* outFile : file where to print
 		* library : used library (MPC or MPFR)
 		* precision : used precision
 		* rouding : used rouding mode
   */
-void initVariables(symbol** TS, FILE* out_file, char* library, int precision, char* rounding) {
+void initVariables(symbol** TS, FILE* outFile, char* library, int precision, char* rounding) {
 
 	// default value of prefixe
 	char* prefixe = "mpc";
@@ -137,7 +137,7 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 	}
 
 	// test if the symbol table and the file are not NULL
-	if((*TS != NULL) && (out_file != NULL)) {
+	if((*TS != NULL) && (outFile != NULL)) {
 		symbol* current = *TS;
 
 		// run through the table
@@ -145,7 +145,7 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 
 			// create variable
 			fprintf(
-				out_file,
+				outFile,
 				"%s_t %s; %s_init2(%s, %d);\n",
 				prefixe,
 				current->id,
@@ -157,7 +157,7 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 			// if the variable has a value, set it
 			if(current->isConstant) {
 				fprintf(
-					out_file,
+					outFile,
 					"%s_set_si(%s, %d, %s);\n",
 					prefixe,
 					current->id,
@@ -166,13 +166,13 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 				);
 			}
 
-			fprintf(out_file, "\n");
+			fprintf(outFile, "\n");
 			current = current->next;
 		}
 
 		// create variable (last symbol)
 		fprintf(
-			out_file,
+			outFile,
 			"%s_t %s; %s_init2(%s, %d);\n",
 			prefixe,
 			current->id,
@@ -184,7 +184,7 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 		// if the variable has a value, set it (last symbol)
 		if(current->isConstant) {
 			fprintf(
-				out_file,
+				outFile,
 				"%s_set_si(%s, %d, %s);\n",
 				prefixe,
 				current->id,
@@ -193,7 +193,7 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
 			);
 		}
 
-		fprintf(out_file, "\n");
+		fprintf(outFile, "\n");
 	}
 }
 
@@ -201,10 +201,10 @@ void initVariables(symbol** TS, FILE* out_file, char* library, int precision, ch
   * desallocVariables : print all variables desallocations
   * Params :
 		* TS : adress of the symbol table containing the temporary variables
-		* out_file : file where to print
+		* outFile : file where to print
 		* library : used library (MPC or MPFR)
   */
-void desallocVariables(symbol** TS, FILE* out_file, char* library) {
+void desallocVariables(symbol** TS, FILE* outFile, char* library) {
 
 	// default value of prefixe
 	char* prefixe = "mpc";
@@ -215,13 +215,13 @@ void desallocVariables(symbol** TS, FILE* out_file, char* library) {
 	}
 
 	// test if the symbol table and the file are not NULL
-	if((*TS != NULL) && (out_file != NULL)) {
+	if((*TS != NULL) && (outFile != NULL)) {
 		symbol* current = *TS;
 
 		// run through the table
 		while(current->next != NULL) {
 			fprintf(
-				out_file,
+				outFile,
 				"%s_clear(%s);\n",
 				prefixe,
 				current->id
@@ -232,7 +232,7 @@ void desallocVariables(symbol** TS, FILE* out_file, char* library) {
 
 		// last symbol
 		fprintf(
-			out_file,
+			outFile,
 			"%s_clear(%s);\n",
 			prefixe,
 			current->id
