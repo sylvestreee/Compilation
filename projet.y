@@ -358,7 +358,13 @@ int main(int argc, char* argv[]) {
 		outFile = fopen("result.c", "w");
 		yyparse();
 		fclose(outFile);
-
+		quad* quadTemp = first;
+		quad* quadTemp2;
+		while(quadTemp != NULL) {
+			quadTemp2 = quadTemp->next;
+			quadFree(quadTemp);
+			quadTemp = quadTemp2;
+		}
 	} else {
 		yyparse();
 	}
